@@ -1,0 +1,2 @@
+rootProject.name='GitHubUser FinalBFAA'
+include ':app'

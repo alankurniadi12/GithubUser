@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">GitHubUser FinalBFAA</string>
+    <string name="search">Search GitUser</string>
+    <string name="search_hint">Input username</string>
+    <string name="username_item">Username Item</string>
+    <string name="cd_image_user_item">Image user item</string>
+    <string name="cd_avatar_user">Avatar user</string>
+    <string name="detail_user_name">User Name</string>
+    <string name="detail_login_name">login_name</string>
+    <string name="cd_icon_company">Icon company</string>
+    <string name="detail_company_name">Company Name</string>
+    <string name="cd_icon_location">Icon location</string>
+    <string name="detail_location_name">Location</string>
+    <string name="cd_icon_blog">Icon blog</string>
+    <string name="detail_blog_name">Blog name</string>
+    <string name="tab_follower">Follower</string>
+    <string name="tab_following">Following</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment_follwer">Hello blank fragment Follower</string>
+    <string name="hello_blank_fragment_follwing">Hello blank fragment Following</string>
+</resources>
