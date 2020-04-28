@@ -2,15 +2,20 @@ package com.example.githubuserfinalbfaa
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.fragment_follower.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -19,7 +24,9 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DETAIL = "extra_detail"
+        const val EXTRA_AVATAR = "extra_avatar"
     }
+    private lateinit var adapter: FollowersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +40,27 @@ class DetailActivity : AppCompatActivity() {
 
 
         showLoading(true)
-        getDetailUser()
+
+        setDetailUser()
     }
 
-    private fun getDetailUser() {
+
+    private fun setDetailUser() {
 
         val model = intent.getParcelableExtra(EXTRA_DETAIL) as UserModel
+        /*val userlogin = intent.getStringExtra(EXTRA_DETAIL)
+        val userAvatar = intent.getStringExtra(EXTRA_AVATAR)*/
+
         tv_detail_loginname.text = model.login
         Glide.with(this).load(model.avatar).into(img_detail_user)
+
+        /*val mFollowerFragment = FollowerFragment()
+        val mBundle = Bundle()
+        mBundle.putString(FollowerFragment.EXTRA_FOLLOWERS, model.login)
+        mFollowerFragment.arguments = mBundle*/
+
         showLoading(false)
+
 
         val asyncClient = AsyncHttpClient()
         asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
@@ -68,14 +87,14 @@ class DetailActivity : AppCompatActivity() {
                     tv_detail_company.text = mModel.company
                     tv_detail_location.text = mModel.location
                     tv_detail_blog.text = mModel.blog
-
-
                 }catch (e: Exception) {
                     Toast.makeText(this@DetailActivity, e.message, Toast.LENGTH_SHORT).show()
                     e.printStackTrace()
                 }
-            }
 
+
+
+            }
             override fun onFailure(
                 statusCode: Int,
                 headers: Array<out Header>?,
@@ -90,7 +109,6 @@ class DetailActivity : AppCompatActivity() {
                     else -> "$statusCode : ${error.message}"
                 }
                 Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
-
             }
         })
 

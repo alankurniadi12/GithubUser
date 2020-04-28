@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.loopj.android.http.AsyncHttpClient
@@ -23,10 +24,9 @@ import java.lang.Exception
  */
 class FollowerFragment : Fragment() {
 
-    companion object {
-        var EXTRA_FOLLOWERS = "extra_followers"
+    companion object{
+        const val EXTRA_FOLLOWERS = "followers"
     }
-
     private lateinit var adapter: FollowersAdapter
 
     override fun onCreateView(
@@ -35,33 +35,35 @@ class FollowerFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_follower, container, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = FollowersAdapter()
-        adapter.notifyDataSetChanged()
 
         showRecyclerView()
-        setFollowersGit()
-    }
+        setFollowers()
 
+    }
 
     private fun showRecyclerView() {
         rv_follower.layoutManager = LinearLayoutManager(context)
         rv_follower.adapter = adapter
+
+        adapter.notifyDataSetChanged()
     }
 
-    private fun setFollowersGit() {
+    private fun setFollowers() {
         val listItems = ArrayList<UserModel>()
 
-        val mLogin = arguments?.getString(EXTRA_FOLLOWERS)
+        val mFollower = arguments?.getString(EXTRA_FOLLOWERS)
 
         val asyncClient = AsyncHttpClient()
         asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
         asyncClient.addHeader("User-Agent", "request")
-        val url = "https://api.github.com/users/$mLogin/followers"
+        val url = "https://api.github.com/users/$mFollower/followers"
 
         asyncClient.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(
@@ -97,6 +99,8 @@ class FollowerFragment : Fragment() {
                 Log.d("onFailur", error.message.toString())
             }
         })
+
+
     }
 
 }

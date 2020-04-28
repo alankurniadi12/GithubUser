@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.adapter.GitAdapter
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.loopj.android.http.AsyncHttpClient
@@ -20,13 +21,14 @@ import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_user.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: GitAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,20 +48,13 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClicked(data: UserModel) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
                 intent.putExtra(DetailActivity.EXTRA_DETAIL, data)
+                //intent.putExtra(DetailActivity.EXTRA_AVATAR, data.avatar)
                 startActivity(intent)
-
-
-                /*val intentFollowerFragment = Intent(this@MainActivity, FollowerFragment::class.java)
-                intentFollowerFragment.putExtra(FollowerFragment.EXTRA_FOLLOWERS, data)
-                startActivity(intentFollowerFragment)*/
 
                 val mFollowerFragment = FollowerFragment()
                 val mBundle = Bundle()
                 mBundle.putString(FollowerFragment.EXTRA_FOLLOWERS, data.login)
-
                 mFollowerFragment.arguments = mBundle
-
-
 
                 Toast.makeText(this@MainActivity, "${data.login}", Toast.LENGTH_SHORT).show()
             }
@@ -81,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     showLoading(true)
                     setSearchUserGit(query)
+                    //setFollowers(query)
                 }
                 return true
             }
