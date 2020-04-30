@@ -7,15 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
-import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.fragment_follower.*
-import kotlinx.android.synthetic.main.item_user.*
 import org.json.JSONArray
 import java.lang.Exception
 
@@ -25,7 +22,7 @@ import java.lang.Exception
 class FollowerFragment : Fragment() {
 
     companion object{
-        const val EXTRA_FOLLOWERS = "followers"
+        var EXTRA_FOLLOWERS = "followers_name"
     }
     private lateinit var adapter: FollowersAdapter
 
@@ -45,14 +42,6 @@ class FollowerFragment : Fragment() {
 
         showRecyclerView()
         setFollowers()
-
-    }
-
-    private fun showRecyclerView() {
-        rv_follower.layoutManager = LinearLayoutManager(context)
-        rv_follower.adapter = adapter
-
-        adapter.notifyDataSetChanged()
     }
 
     private fun setFollowers() {
@@ -99,8 +88,15 @@ class FollowerFragment : Fragment() {
                 Log.d("onFailur", error.message.toString())
             }
         })
-
-
     }
+
+    private fun showRecyclerView() {
+        rv_follower.layoutManager = LinearLayoutManager(context)
+        rv_follower.adapter = adapter
+
+        adapter.notifyDataSetChanged()
+    }
+
+
 
 }

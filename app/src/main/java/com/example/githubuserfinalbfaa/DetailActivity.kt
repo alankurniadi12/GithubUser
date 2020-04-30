@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
@@ -24,13 +23,12 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DETAIL = "extra_detail"
-        const val EXTRA_AVATAR = "extra_avatar"
     }
-    private lateinit var adapter: FollowersAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+
+
 
         val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
         view_pager.adapter = sectionsPagerAdaper
@@ -38,29 +36,16 @@ class DetailActivity : AppCompatActivity() {
 
         supportActionBar?.elevation = 0f
 
-
         showLoading(true)
-
         setDetailUser()
     }
 
-
-    private fun setDetailUser() {
+    fun setDetailUser() {
 
         val model = intent.getParcelableExtra(EXTRA_DETAIL) as UserModel
-        /*val userlogin = intent.getStringExtra(EXTRA_DETAIL)
-        val userAvatar = intent.getStringExtra(EXTRA_AVATAR)*/
-
         tv_detail_loginname.text = model.login
         Glide.with(this).load(model.avatar).into(img_detail_user)
-
-        /*val mFollowerFragment = FollowerFragment()
-        val mBundle = Bundle()
-        mBundle.putString(FollowerFragment.EXTRA_FOLLOWERS, model.login)
-        mFollowerFragment.arguments = mBundle*/
-
         showLoading(false)
-
 
         val asyncClient = AsyncHttpClient()
         asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
@@ -91,9 +76,6 @@ class DetailActivity : AppCompatActivity() {
                     Toast.makeText(this@DetailActivity, e.message, Toast.LENGTH_SHORT).show()
                     e.printStackTrace()
                 }
-
-
-
             }
             override fun onFailure(
                 statusCode: Int,
@@ -111,7 +93,6 @@ class DetailActivity : AppCompatActivity() {
                 Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
             }
         })
-
     }
 
     private fun showLoading(state: Boolean){

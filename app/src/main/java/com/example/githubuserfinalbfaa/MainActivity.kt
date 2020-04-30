@@ -46,15 +46,15 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnitemClickCallback(object : GitAdapter.OnitemClickCallback{
             override fun onItemClicked(data: UserModel) {
-                val intent = Intent(this@MainActivity, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_DETAIL, data)
-                //intent.putExtra(DetailActivity.EXTRA_AVATAR, data.avatar)
-                startActivity(intent)
 
                 val mFollowerFragment = FollowerFragment()
                 val mBundle = Bundle()
                 mBundle.putString(FollowerFragment.EXTRA_FOLLOWERS, data.login)
                 mFollowerFragment.arguments = mBundle
+
+                val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, data)
+                startActivity(intent)
 
                 Toast.makeText(this@MainActivity, "${data.login}", Toast.LENGTH_SHORT).show()
             }
