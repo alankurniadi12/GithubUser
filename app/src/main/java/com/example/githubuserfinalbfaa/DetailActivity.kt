@@ -49,7 +49,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setDetailUser(login: String?) {
         val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37e126")
+        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
         asyncClient.addHeader("User-Agent", "request")
         val url = "https://api.github.com/users/$login"
 

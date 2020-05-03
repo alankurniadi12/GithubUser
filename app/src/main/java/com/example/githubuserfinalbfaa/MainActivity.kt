@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         val listItems = ArrayList<UserModel>()
 
         val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37e126")
+        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
         asyncClient.addHeader("User-Agent", "request")
         val url = "https://api.github.com/search/users?q=$insertQuery"
 
