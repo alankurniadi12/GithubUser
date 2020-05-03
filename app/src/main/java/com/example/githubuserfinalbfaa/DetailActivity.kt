@@ -2,19 +2,15 @@ package com.example.githubuserfinalbfaa
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.fragment_follower.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -22,35 +18,40 @@ class DetailActivity : AppCompatActivity() {
 
 
     companion object {
-        const val EXTRA_DETAIL = "extra_detail"
+        const val EXTRA_LOGIN_NAME = "extra_detail"
+        const val EXTRA_AVATAR = "extra_avatar"
+
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        showLoading(true)
+        //val model = intent.getParcelableExtra(EXTRA_DETAIL) as UserModel
+        val username = intent.getStringExtra(EXTRA_LOGIN_NAME)
+        val avatar = intent.getStringExtra(EXTRA_AVATAR)
+        tv_detail_loginname.text = username
+        Glide.with(this).load(avatar).into(img_detail_user)
+        setDetailUser(username)
 
 
         val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
         view_pager.adapter = sectionsPagerAdaper
         tabs.setupWithViewPager(view_pager)
-
         supportActionBar?.elevation = 0f
 
-        showLoading(true)
-        setDetailUser()
+        val fragment = FollowerFragment()
+        val bundle = Bundle()
+        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, username)
+        fragment.arguments = bundle
     }
 
-    fun setDetailUser() {
-
-        val model = intent.getParcelableExtra(EXTRA_DETAIL) as UserModel
-        tv_detail_loginname.text = model.login
-        Glide.with(this).load(model.avatar).into(img_detail_user)
-        showLoading(false)
-
+    private fun setDetailUser(login: String?) {
         val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
+        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37e126")
         asyncClient.addHeader("User-Agent", "request")
-        val url = "https://api.github.com/users/${model.login}"
+        val url = "https://api.github.com/users/$login"
 
         asyncClient.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(

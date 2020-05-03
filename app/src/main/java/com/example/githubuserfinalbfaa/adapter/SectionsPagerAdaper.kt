@@ -19,6 +19,7 @@ class SectionsPagerAdaper(private val mContext: Context, fm: FragmentManager): F
         var fragment: Fragment? = null
         when (position) {
             0 -> fragment = FollowerFragment()
+
             1 -> fragment = FollowingFragment()
         }
         return fragment as Fragment

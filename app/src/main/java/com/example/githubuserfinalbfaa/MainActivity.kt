@@ -46,14 +46,9 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnitemClickCallback(object : GitAdapter.OnitemClickCallback{
             override fun onItemClicked(data: UserModel) {
-
-                val mFollowerFragment = FollowerFragment()
-                val mBundle = Bundle()
-                mBundle.putString(FollowerFragment.EXTRA_FOLLOWERS, data.login)
-                mFollowerFragment.arguments = mBundle
-
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_DETAIL, data)
+                intent.putExtra(DetailActivity.EXTRA_LOGIN_NAME, data.login)
+                intent.putExtra(DetailActivity.EXTRA_AVATAR, data.avatar)
                 startActivity(intent)
 
                 Toast.makeText(this@MainActivity, "${data.login}", Toast.LENGTH_SHORT).show()
@@ -95,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         val listItems = ArrayList<UserModel>()
 
         val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
+        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37e126")
         asyncClient.addHeader("User-Agent", "request")
         val url = "https://api.github.com/search/users?q=$insertQuery"
 
