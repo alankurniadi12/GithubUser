@@ -1,6 +1,5 @@
 package com.example.githubuserfinalbfaa.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.model.UserModel
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class FollowersAdapter: RecyclerView.Adapter<FollowersAdapter.FollowerViewHolder>() {
+class FollowingAdapter: RecyclerView.Adapter<FollowingAdapter.FollowingViewHolder>() {
 
     private val mData= ArrayList<UserModel>()
 
@@ -20,18 +19,18 @@ class FollowersAdapter: RecyclerView.Adapter<FollowersAdapter.FollowerViewHolder
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowerViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowingViewHolder {
         val mView = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
-        return FollowerViewHolder(mView)
+        return FollowingViewHolder(mView)
     }
 
     override fun getItemCount(): Int = mData.size
 
-    override fun onBindViewHolder(holder: FollowerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FollowingViewHolder, position: Int) {
         holder.bind(mData[position])
     }
 
-    class FollowerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class FollowingViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(userModel: UserModel){
             with(itemView){
                 Glide.with(itemView.context).load(userModel.avatar).into(img_item_user)
@@ -39,5 +38,4 @@ class FollowersAdapter: RecyclerView.Adapter<FollowersAdapter.FollowerViewHolder
             }
         }
     }
-
 }

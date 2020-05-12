@@ -6,12 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.model.UserModel
+import com.example.githubuserfinalbfaa.viewmodel.FollowersViewModel
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
+import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.fragment_follower.*
 import org.json.JSONArray
 import java.lang.Exception
@@ -22,11 +26,10 @@ import java.lang.Exception
 class FollowerFragment : Fragment() {
 
     companion object{
-        var EXTRA_FOLLOWERS = "followers_name"
-
-
+        const val EXTRA_FOLLOWERS = "followers_name"
     }
     private lateinit var adapter: FollowersAdapter
+    private lateinit var followersViewModel: FollowersViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,58 +44,24 @@ class FollowerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = FollowersAdapter()
-
         showRecyclerView()
+
+        followersViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowersViewModel::class.java)
+
+
         if (arguments != null) {
             val username = arguments?.getString(EXTRA_FOLLOWERS)
-            setFollowers(username.toString())
+            followersViewModel.setFollowers(username.toString())
         }
 
-    }
-
-    private fun setFollowers(loginName: String) {
-        val listItems = ArrayList<UserModel>()
-
-        val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
-        asyncClient.addHeader("User-Agent", "request")
-        val url = "https://api.github.com/users/$loginName/followers"
-
-        asyncClient.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(
-                statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray
-            ) {
-                try {
-                    val result = String(responseBody)
-                    val responsArray = JSONArray(result)
-
-                    for (i in 0 until responsArray.length()){
-                        val jsonObject = responsArray.getJSONObject(i)
-                        val mModel = UserModel()
-                        mModel.login = jsonObject.getString("login")
-                        mModel.avatar = jsonObject.getString("avatar_url")
-
-                        listItems.add(mModel)
-                    }
-                    adapter.setData(listItems)
-
-                }catch (e: Exception){
-                    Log.d("Exception", e.message.toString())
-                }
-            }
-
-            override fun onFailure(
-                statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray?,
-                error: Throwable
-            ) {
-                Log.d("onFailur", error.message.toString())
+        followersViewModel.getFollowers().observe(this, Observer { usermodel ->
+            if (usermodel != null) {
+                adapter.setData(usermodel)
             }
         })
+
     }
+
 
     private fun showRecyclerView() {
         rv_follower.layoutManager = LinearLayoutManager(context)
@@ -100,7 +69,5 @@ class FollowerFragment : Fragment() {
 
         adapter.notifyDataSetChanged()
     }
-
-
 
 }

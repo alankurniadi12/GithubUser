@@ -12,10 +12,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.adapter.GitAdapter
+import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
 import com.example.githubuserfinalbfaa.model.UserModel
+import com.example.githubuserfinalbfaa.viewmodel.MainViewModel
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
@@ -29,6 +33,7 @@ import java.lang.Exception
 class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: GitAdapter
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +43,15 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
 
         showRecyclerView()
+
+        mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+
+        mainViewModel.getGitSearch().observe(this, Observer { usermodel ->
+            if (usermodel != null){
+                adapter.setData(usermodel)
+                showLoading(false)
+            }
+        })
     }
 
     private fun showRecyclerView() {
@@ -47,8 +61,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setOnitemClickCallback(object : GitAdapter.OnitemClickCallback{
             override fun onItemClicked(data: UserModel) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_LOGIN_NAME, data.login)
-                intent.putExtra(DetailActivity.EXTRA_AVATAR, data.avatar)
+                intent.putExtra(DetailActivity.EXTRA_STATE, data)
                 startActivity(intent)
 
                 Toast.makeText(this@MainActivity, "${data.login}", Toast.LENGTH_SHORT).show()
@@ -70,8 +83,7 @@ class MainActivity : AppCompatActivity() {
                     return true
                 } else {
                     showLoading(true)
-                    setSearchUserGit(query)
-                    //setFollowers(query)
+                    mainViewModel.setSearchUserGit(query)
                 }
                 return true
             }
@@ -83,53 +95,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_favorite -> {
+                val intent = Intent(this, FavoriteActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+        }
         return false
     }
 
-    fun setSearchUserGit(insertQuery: String) {
-        val listItems = ArrayList<UserModel>()
-
-        val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
-        asyncClient.addHeader("User-Agent", "request")
-        val url = "https://api.github.com/search/users?q=$insertQuery"
-
-        asyncClient.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(
-                statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray
-            ) {
-                try {
-                    val result = String(responseBody)
-                    val responObject = JSONObject(result)
-                    val item = responObject.getJSONArray("items")
-
-                    for (i in 0 until item.length()) {
-                        val user = item.getJSONObject(i)
-                        val userModel = UserModel ()
-                        userModel.login = user.getString("login")
-                        userModel.avatar = user.getString("avatar_url")
-
-                        listItems.add(userModel)
-                    }
-                    adapter.setData(listItems)
-                    showLoading(false)
-                }catch (e: Exception){
-                    Log.d("Exception", e.message.toString())
-                }
-            }
-
-            override fun onFailure(
-                statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray?,
-                error: Throwable
-            ) {
-                Log.d("onFailur", error.message.toString())
-            }
-        })
-    }
 
     private fun showLoading(state: Boolean){
         if (state){

@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_search_black_24dp"
         app:showAsAction="collapseActionView|always"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
+    <item
+        android:id="@+id/menu_favorite"
+        android:title="Favirite"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        app:showAsAction="collapseActionView|ifRoom"/>
 </menu>

@@ -1,16 +1,21 @@
 package com.example.githubuserfinalbfaa.adapter
 
 import android.content.Context
+import android.os.Bundle
 import androidx.annotation.Nullable
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.githubuserfinalbfaa.DetailActivity
 import com.example.githubuserfinalbfaa.FollowerFragment
 import com.example.githubuserfinalbfaa.FollowingFragment
 import com.example.githubuserfinalbfaa.R
+import kotlin.math.log
 
 class SectionsPagerAdaper(private val mContext: Context, fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
+    var username: String? = "username"
 
     @StringRes
     private val TAB_TITLES = intArrayOf(R.string.tab_follower, R.string.tab_following)
@@ -18,11 +23,29 @@ class SectionsPagerAdaper(private val mContext: Context, fm: FragmentManager): F
     override fun getItem(position: Int): Fragment {
         var fragment: Fragment? = null
         when (position) {
-            0 -> fragment = FollowerFragment()
+            0 -> {
+                fragment = FollowerFragment()
+                val bundle = Bundle()
+                bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, getData())
+                fragment.arguments = bundle
+            }
 
-            1 -> fragment = FollowingFragment()
+            1 -> {
+                fragment = FollowingFragment()
+                val bundle = Bundle()
+                bundle.putString(FollowingFragment.EXTRA_FOLLOWING, getData())
+                fragment.arguments = bundle
+            }
         }
         return fragment as Fragment
+    }
+
+    fun setData(loginName: String){
+        username = loginName
+    }
+
+    private fun getData(): String? {
+        return username
     }
 
     @Nullable

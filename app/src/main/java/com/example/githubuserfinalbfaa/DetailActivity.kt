@@ -1,106 +1,116 @@
 package com.example.githubuserfinalbfaa
 
+import android.content.ContentValues
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.githubuserfinalbfaa.adapter.FavoriteAdapter
 import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
+import com.example.githubuserfinalbfaa.db.DatabaseContract
+import com.example.githubuserfinalbfaa.db.GitHelper
 import com.example.githubuserfinalbfaa.model.UserModel
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
+import com.example.githubuserfinalbfaa.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
-import org.json.JSONObject
-import java.lang.Exception
 
 class DetailActivity : AppCompatActivity() {
 
+    private var isFavorite = false
+    private var menuItem: Menu? = null
+    private lateinit var gitHelper: GitHelper
+    private var userModel: UserModel? = null
+    private var position: Int = 0
+    private lateinit var detailViewModel: DetailViewModel
+    private lateinit var adapter: FavoriteAdapter
 
     companion object {
-        const val EXTRA_LOGIN_NAME = "extra_detail"
-        const val EXTRA_AVATAR = "extra_avatar"
-
-
+        internal val TAG = DetailActivity::class.java.simpleName
+        const val EXTRA_STATE = "extra_state"
+        const val EXTRA_FAV = "extra_fav"
+        const val EXTRA_FAV_POSITION = "extra_fav_position"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        showLoading(true)
-        //val model = intent.getParcelableExtra(EXTRA_DETAIL) as UserModel
-        val username = intent.getStringExtra(EXTRA_LOGIN_NAME)
-        val avatar = intent.getStringExtra(EXTRA_AVATAR)
-        tv_detail_loginname.text = username
-        Glide.with(this).load(avatar).into(img_detail_user)
-        setDetailUser(username)
+        adapter = FavoriteAdapter(this)
+        gitHelper = GitHelper.getInstance(applicationContext)
+        gitHelper.open()
 
+        userModel = intent.getParcelableExtra(EXTRA_STATE) as UserModel
+        if (userModel != null) {
+            position = intent.getIntExtra(EXTRA_FAV_POSITION, 0)
+            isFavorite = true
+            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
+        } else {
+            userModel = UserModel()
+        }
+
+        tv_detail_loginname.text = userModel!!.login
+        Glide.with(this).load(userModel!!.avatar).into(img_detail_user)
+
+        detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
+        detailViewModel.setDetailUser(userModel!!)
 
         val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
+        sectionsPagerAdaper.setData(userModel!!.login.toString())
         view_pager.adapter = sectionsPagerAdaper
         tabs.setupWithViewPager(view_pager)
         supportActionBar?.elevation = 0f
 
-        val fragment = FollowerFragment()
         val bundle = Bundle()
-        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, username)
-        fragment.arguments = bundle
+        val followerFragment = FollowerFragment()
+        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, userModel!!.login)
+        followerFragment.arguments = bundle
+        val followingFragment = FollowingFragment()
+        bundle.putString(FollowingFragment.EXTRA_FOLLOWING, userModel!!.login)
+        followingFragment.arguments = bundle
+
     }
 
-    private fun setDetailUser(login: String?) {
-        val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
-        asyncClient.addHeader("User-Agent", "request")
-        val url = "https://api.github.com/users/$login"
-
-        asyncClient.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(
-                statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray
-            ) {
-                showLoading(false)
-                try {
-                    val result = String(responseBody)
-                    val responObject = JSONObject(result)
-                    val mModel = UserModel()
-                    mModel.name = responObject.getString("name")
-                    mModel.company = responObject.getString("company")
-                    mModel.location = responObject.getString("location")
-                    mModel.blog = responObject.getString("blog")
-
-                    tv_detail_username.text = mModel.name
-                    tv_detail_company.text = mModel.company
-                    tv_detail_location.text = mModel.location
-                    tv_detail_blog.text = mModel.blog
-                }catch (e: Exception) {
-                    Toast.makeText(this@DetailActivity, e.message, Toast.LENGTH_SHORT).show()
-                    e.printStackTrace()
-                }
-            }
-            override fun onFailure(
-                statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray?,
-                error: Throwable
-            ) {
-                showLoading(false)
-                val errorMessage = when (statusCode) {
-                    401 -> "$statusCode : Bad Request"
-                    403 -> "$statusCode : Forbidden"
-                    404 -> "$statusCode : Not Found"
-                    else -> "$statusCode : ${error.message}"
-                }
-                Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun showLoading(state: Boolean){
-        if (state){
-            progressbar_detail.visibility = View.VISIBLE
-        } else {
-            progressbar_detail.visibility = View.GONE
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuItem = menu
+        if (isFavorite){
+            menuInflater.inflate(R.menu.favorite_menu, menu)
         }
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.add_favorite ->{
+                val favData = intent.getParcelableExtra(EXTRA_STATE) as UserModel
+                if (!isFavorite){
+                    gitHelper.deleteByLoginName(favData.login.toString()).toLong()
+                    Log.d(TAG, "Hapus data favorite dari DB!!")
+
+                    menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_border_black_24dp)
+                    Toast.makeText(this, "Favorite removed", Toast.LENGTH_SHORT).show()
+                } else{
+                    val values = ContentValues()
+                    values.put(DatabaseContract.GitColumns.LOGIN_NAME, favData.login)
+                    values.put(DatabaseContract.GitColumns.AVATAR, favData.avatar)
+                    gitHelper.insert(values)
+                    Log.d(TAG, "Data favorite berhasil dimasukan ke DB!!")
+
+                    menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
+                    Toast.makeText(this, "Favorite added", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        gitHelper.close()
     }
 }
