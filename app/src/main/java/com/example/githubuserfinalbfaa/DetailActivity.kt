@@ -1,7 +1,6 @@
 package com.example.githubuserfinalbfaa
 
 import android.content.ContentValues
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.githubuserfinalbfaa.adapter.FavoriteAdapter
@@ -25,8 +23,8 @@ class DetailActivity : AppCompatActivity() {
     private var isFavorite = false
     private var menuItem: Menu? = null
     private lateinit var gitHelper: GitHelper
-    private var userModel: UserModel? = null
-    private var position: Int = 0
+    private lateinit var userModel: UserModel
+
     private lateinit var detailViewModel: DetailViewModel
     private lateinit var adapter: FavoriteAdapter
 
@@ -44,41 +42,42 @@ class DetailActivity : AppCompatActivity() {
         gitHelper = GitHelper.getInstance(applicationContext)
         gitHelper.open()
 
-        userModel = intent.getParcelableExtra(EXTRA_STATE) as UserModel
-        if (userModel != null) {
-            position = intent.getIntExtra(EXTRA_FAV_POSITION, 0)
-            isFavorite = true
-            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
-        } else {
-            userModel = UserModel()
-        }
 
-        tv_detail_loginname.text = userModel!!.login
-        Glide.with(this).load(userModel!!.avatar).into(img_detail_user)
+        userModel = intent.getParcelableExtra(EXTRA_STATE) as UserModel
+        tv_detail_loginname.text = userModel.login
+        Glide.with(this).load(userModel.avatar).into(img_detail_user)
+
+        isFavoriteCheck(userModel)
+
 
         detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
-        detailViewModel.setDetailUser(userModel!!)
+        detailViewModel.setDetailUser(userModel)
 
         val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
-        sectionsPagerAdaper.setData(userModel!!.login.toString())
+        sectionsPagerAdaper.setData(userModel.login.toString())
         view_pager.adapter = sectionsPagerAdaper
         tabs.setupWithViewPager(view_pager)
         supportActionBar?.elevation = 0f
 
         val bundle = Bundle()
         val followerFragment = FollowerFragment()
-        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, userModel!!.login)
+        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, userModel.login)
         followerFragment.arguments = bundle
         val followingFragment = FollowingFragment()
-        bundle.putString(FollowingFragment.EXTRA_FOLLOWING, userModel!!.login)
+        bundle.putString(FollowingFragment.EXTRA_FOLLOWING, userModel.login)
         followingFragment.arguments = bundle
 
     }
 
+    private fun isFavoriteCheck(userModel: UserModel) {
+        isFavorite = true
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuItem = menu
-        if (isFavorite){
-            menuInflater.inflate(R.menu.favorite_menu, menu)
+        menuInflater.inflate(R.menu.favorite_menu, menu)
+        if (!isFavorite){
+            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
         }
 
         return super.onCreateOptionsMenu(menu)

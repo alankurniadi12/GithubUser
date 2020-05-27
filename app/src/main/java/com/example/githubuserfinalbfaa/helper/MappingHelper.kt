@@ -7,7 +7,6 @@ import com.example.githubuserfinalbfaa.model.UserModel
 object MappingHelper {
     fun mapCursorToArrayList(gitCursor: Cursor?): ArrayList<UserModel> {
         val gitList = ArrayList<UserModel>()
-
         gitCursor?.apply {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(DatabaseContract.GitColumns._ID))

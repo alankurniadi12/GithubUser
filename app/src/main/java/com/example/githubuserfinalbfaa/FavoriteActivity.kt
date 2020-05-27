@@ -25,6 +25,7 @@ class FavoriteActivity : AppCompatActivity() {
     private lateinit var adapter: FavoriteAdapter
     private var userModel: UserModel? = null
     private var data: Intent? = null
+    private var position: Int = 0
 
     companion object {
         const val FAV_EXTRA = "fav_extra"
@@ -46,6 +47,7 @@ class FavoriteActivity : AppCompatActivity() {
         gitHelper.open()
 
         if (savedInstanceState == null) {
+            position = intent.getIntExtra(DetailActivity.EXTRA_FAV_POSITION, 0)
             loadFavoriteAsync()
         } else {
             val list = savedInstanceState.getParcelableArrayList<UserModel>(FAV_EXTRA)
