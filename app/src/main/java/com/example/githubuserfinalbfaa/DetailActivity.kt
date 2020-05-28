@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.githubuserfinalbfaa.adapter.FavoriteAdapter
@@ -43,26 +44,35 @@ class DetailActivity : AppCompatActivity() {
         gitHelper.open()
 
 
-        userModel = intent.getParcelableExtra(EXTRA_STATE) as UserModel
-        tv_detail_loginname.text = userModel.login
-        Glide.with(this).load(userModel.avatar).into(img_detail_user)
-
-        //isFavoriteCheck(userModel)
+        val model = intent.getParcelableExtra(EXTRA_STATE) as UserModel
+        tv_detail_loginname.text = model.login
+        Glide.with(this).load(model.avatar).into(img_detail_user)
         detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
-        detailViewModel.setDetailUser(userModel)
+        detailViewModel.setDetailUser(model.login)
+
+        detailViewModel.getDetailData().observe(this, Observer { userModel ->
+            if (userModel != null) {
+                Log.d(TAG, "GetDetail Success")
+                tv_detail_username.text = userModel.name
+                tv_detail_company.text = userModel.company
+                tv_detail_location.text = userModel.location
+                tv_detail_blog.text = userModel.blog
+            }
+        })
+        //isFavoriteCheck(userModel)
 
         val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
-        sectionsPagerAdaper.setData(userModel.login.toString())
+        sectionsPagerAdaper.setData(model.login.toString())
         view_pager.adapter = sectionsPagerAdaper
         tabs.setupWithViewPager(view_pager)
         supportActionBar?.elevation = 0f
 
         val bundle = Bundle()
         val followerFragment = FollowerFragment()
-        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, userModel.login)
+        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, model.login)
         followerFragment.arguments = bundle
         val followingFragment = FollowingFragment()
-        bundle.putString(FollowingFragment.EXTRA_FOLLOWING, userModel.login)
+        bundle.putString(FollowingFragment.EXTRA_FOLLOWING, model.login)
         followingFragment.arguments = bundle
 
     }

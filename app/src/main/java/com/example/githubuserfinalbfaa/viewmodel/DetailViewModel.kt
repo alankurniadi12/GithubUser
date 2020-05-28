@@ -1,5 +1,8 @@
 package com.example.githubuserfinalbfaa.viewmodel
 
+import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubuserfinalbfaa.DetailActivity
@@ -10,39 +13,39 @@ import cz.msebera.android.httpclient.Header
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.json.JSONObject
 import java.lang.Exception
+import kotlin.math.log
 
 class DetailViewModel: ViewModel() {
 
-    private lateinit var detailActivity: DetailActivity
+    companion object {
+        private val TAG = DetailViewModel::class.java.simpleName
+    }
+    private val dataDetail = MutableLiveData<UserModel>()
 
-    fun setDetailUser(login: UserModel){
+    fun setDetailUser(login: String?){
+        //val userModel = UserModel()
         val asyncClient = AsyncHttpClient()
         asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
         asyncClient.addHeader("User-Agent", "request")
         val url = "https://api.github.com/users/$login"
-
         asyncClient.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(
                 statusCode: Int,
                 headers: Array<out Header>?,
                 responseBody: ByteArray
             ) {
+                val result = String(responseBody)
+                Log.d(TAG, "GetAPI Success")
                 try {
-                    val result = String(responseBody)
                     val responObject = JSONObject(result)
                     val mModel = UserModel()
-                    //mModel.id = responObject.getString("id")
                     mModel.name = responObject.getString("name")
                     mModel.company = responObject.getString("company")
                     mModel.location = responObject.getString("location")
                     mModel.blog = responObject.getString("blog")
-
-                    detailActivity.tv_detail_username.text = mModel.name
-                    detailActivity.tv_detail_company.text = mModel.company
-                    detailActivity.tv_detail_location.text = mModel.location
-                    detailActivity.tv_detail_blog.text = mModel.blog
+                    dataDetail.postValue(mModel)
                 }catch (e: Exception) {
-                    //Toast.makeText(detailActivity.applicationContext, e.message, Toast.LENGTH_SHORT).show()
+
                     e.printStackTrace()
                 }
             }
@@ -52,7 +55,7 @@ class DetailViewModel: ViewModel() {
                 responseBody: ByteArray?,
                 error: Throwable
             ) {
-                //detailActivity.showLoading(false)
+                Log.d(TAG, "GetAPI Failure")
                 val errorMessage = when (statusCode) {
                     401 -> "$statusCode : Bad Request"
                     403 -> "$statusCode : Forbidden"
@@ -62,5 +65,8 @@ class DetailViewModel: ViewModel() {
                 //Toast.makeText(detailActivity.applicationContext, errorMessage, Toast.LENGTH_SHORT).show()
             }
         })
+    }
+    fun getDetailData(): LiveData<UserModel>{
+        return dataDetail
     }
 }
