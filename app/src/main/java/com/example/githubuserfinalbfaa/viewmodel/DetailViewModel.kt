@@ -17,7 +17,7 @@ class DetailViewModel: ViewModel() {
 
     fun setDetailUser(login: UserModel){
         val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37e126")
+        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
         asyncClient.addHeader("User-Agent", "request")
         val url = "https://api.github.com/users/$login"
 
@@ -31,6 +31,7 @@ class DetailViewModel: ViewModel() {
                     val result = String(responseBody)
                     val responObject = JSONObject(result)
                     val mModel = UserModel()
+                    //mModel.id = responObject.getString("id")
                     mModel.name = responObject.getString("name")
                     mModel.company = responObject.getString("company")
                     mModel.location = responObject.getString("location")

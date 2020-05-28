@@ -41,11 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         adapter = GitAdapter()
         adapter.notifyDataSetChanged()
-
         showRecyclerView()
 
         mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
-
         mainViewModel.getGitSearch().observe(this, Observer { usermodel ->
             if (usermodel != null){
                 adapter.setData(usermodel)
@@ -63,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
                 intent.putExtra(DetailActivity.EXTRA_STATE, data)
                 startActivity(intent)
-
                 Toast.makeText(this@MainActivity, "${data.login}", Toast.LENGTH_SHORT).show()
             }
         })

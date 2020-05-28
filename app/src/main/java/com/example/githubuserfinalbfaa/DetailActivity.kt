@@ -47,9 +47,7 @@ class DetailActivity : AppCompatActivity() {
         tv_detail_loginname.text = userModel.login
         Glide.with(this).load(userModel.avatar).into(img_detail_user)
 
-        isFavoriteCheck(userModel)
-
-
+        //isFavoriteCheck(userModel)
         detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
         detailViewModel.setDetailUser(userModel)
 
