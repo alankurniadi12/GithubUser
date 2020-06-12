@@ -17,4 +17,17 @@ object MappingHelper {
         }
         return gitList
     }
+
+    fun mapCursorToObject(gitFavorite: Cursor?): UserModel {
+        var userModel = UserModel()
+        gitFavorite?.apply {
+            moveToFirst()
+            val id = getInt(getColumnIndexOrThrow(DatabaseContract.GitColumns._ID))
+            val loginName = getString(getColumnIndexOrThrow(DatabaseContract.GitColumns.LOGIN_NAME))
+            val avatar = getString(getColumnIndexOrThrow(DatabaseContract.GitColumns.AVATAR))
+            userModel = UserModel(id, loginName, avatar)
+        }
+        return userModel
+    }
+
 }

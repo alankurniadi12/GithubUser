@@ -39,6 +39,8 @@ class DetailViewModel: ViewModel() {
                 try {
                     val responObject = JSONObject(result)
                     val mModel = UserModel()
+                    mModel.login = responObject.getString("login")
+                    mModel.id = responObject.getString("id").toInt()
                     mModel.name = responObject.getString("name")
                     mModel.company = responObject.getString("company")
                     mModel.location = responObject.getString("location")

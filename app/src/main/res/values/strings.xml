@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GitHubUser FinalBFAA</string>
+    <string name="app_name">GitHubUser</string>
     <string name="search">Search GitUser</string>
     <string name="search_hint">Input username</string>
     <string name="username_item">Username Item</string>

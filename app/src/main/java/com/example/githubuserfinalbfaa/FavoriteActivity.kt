@@ -48,7 +48,7 @@ class FavoriteActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             position = intent.getIntExtra(DetailActivity.EXTRA_FAV_POSITION, 0)
-            loadFavoriteAsync()
+            //loadFavoriteAsync()
         } else {
             val list = savedInstanceState.getParcelableArrayList<UserModel>(FAV_EXTRA)
             if (list != null) {
@@ -62,7 +62,7 @@ class FavoriteActivity : AppCompatActivity() {
         outState.putParcelableArrayList(FAV_EXTRA, adapter.listFavorite)
     }
 
-    private fun loadFavoriteAsync() {
+    /*private fun loadFavoriteAsync() {
         GlobalScope.launch(Dispatchers.Main) {
             progress_bar.visibility = View.VISIBLE
             val defrerredFav = async(Dispatchers.IO) {
@@ -76,7 +76,7 @@ class FavoriteActivity : AppCompatActivity() {
                 showSnackbarMessage("Tidak ada data saat ini")
             }
         }
-    }
+    }*/
 
     private fun showSnackbarMessage(message: String) {
         Snackbar.make(rv_favorite, message, Snackbar.LENGTH_SHORT).show()
