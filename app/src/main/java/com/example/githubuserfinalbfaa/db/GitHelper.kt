@@ -4,11 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion.AVATAR
-import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion.LOGIN_NAME
 import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion.TABLE_NAME
 import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion._ID
-import com.example.githubuserfinalbfaa.model.UserModel
 import java.sql.SQLException
 
 class GitHelper (context: Context) {
@@ -40,28 +37,21 @@ class GitHelper (context: Context) {
             database.close()
     }
 
-    fun queryAll(): ArrayList<UserModel> {
-        val arrayList = ArrayList<UserModel>()
-        val cursor = database.query(DATABASE_TABLE, null, null, null, null, null, "$_ID DESC")
-        cursor.moveToFirst()
-        var userModel: UserModel
-        if (cursor.count > 0){
-            do {
-                userModel = UserModel()
-                userModel.id = cursor.getInt(cursor.getColumnIndex(_ID))
-                userModel.login = cursor.getString(cursor.getColumnIndex(LOGIN_NAME))
-                userModel.avatar = cursor.getString(cursor.getColumnIndex(AVATAR))
-                arrayList.add(userModel)
-                cursor.moveToNext()
-            } while (!cursor.isAfterLast)
-        }
-        return arrayList
+    fun queryAll(): Cursor {
+        return database.query(
+            DATABASE_TABLE, null, null, null, null, null, "$_ID DESC"
+        )
     }
 
     fun queryById(id: String): Cursor {
         return database.query(
             DATABASE_TABLE, null, "$_ID = ?", arrayOf(id), null, null, null, null
         )
+    }
+
+    fun update(id: String, values: ContentValues?): Int {
+        open()
+        return database.update(DATABASE_TABLE, values, "$_ID = ?", arrayOf(id))
     }
     fun insert(values: ContentValues?): Long {
         return database.insert(DATABASE_TABLE, null, values)

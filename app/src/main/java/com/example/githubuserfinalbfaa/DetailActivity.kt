@@ -2,6 +2,7 @@ package com.example.githubuserfinalbfaa
 
 import android.content.ContentValues
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -13,9 +14,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
 import com.example.githubuserfinalbfaa.db.DatabaseContract
-import com.example.githubuserfinalbfaa.db.GitHelper
+import com.example.githubuserfinalbfaa.db.DatabaseContract.CONTENT_URI
+import com.example.githubuserfinalbfaa.helper.MappingHelper
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.example.githubuserfinalbfaa.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -27,8 +30,8 @@ class DetailActivity : AppCompatActivity() {
     private var userModel: UserModel? = null
     private var fromFavorite: String? = null
     private var fromMainAcitivity: String? = null
-    private lateinit var gitHelper: GitHelper
     private lateinit var detailViewModel: DetailViewModel
+    private lateinit var uriWithId: Uri
 
     companion object {
         internal val TAG = DetailActivity::class.java.simpleName
@@ -42,18 +45,23 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         supportActionBar?.title = "Detail User"
 
-        gitHelper = GitHelper.getInstance(applicationContext)
-        gitHelper.open()
-
         fromFavorite = intent.getStringExtra(EXTRA_FAV)
         fromMainAcitivity = intent.getStringExtra(EXTRA_MAIN)
 
         userModel = intent.getParcelableExtra(EXTRA_STATE) as UserModel
         tv_detail_loginname.text = userModel?.login
-        Glide.with(this).load(userModel?.avatar).into(img_detail_user)
+        Glide.with(this)
+            .load(userModel?.avatar)
+            .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
+            .error(R.drawable.ic_error)
+            .into(img_detail_user)
 
-        val dataFav = gitHelper.queryAll()
-        for (data in dataFav) {
+        uriWithId = Uri.parse(CONTENT_URI.toString() + "/" + userModel?.id)
+
+
+        val dataGitFav = contentResolver?.query(uriWithId, null, null, null, null)
+        val dataGitObject = MappingHelper.mapCursorToArrayList(dataGitFav)
+        for (data in dataGitObject) {
             if (this.userModel?.login == data.login) {
                 isFavorite = true
                 Log.d(TAG, "this User Favorite")
@@ -114,7 +122,8 @@ class DetailActivity : AppCompatActivity() {
     private fun setFavorite() {
         if (isFavorite) {
             userModel?.let {
-                gitHelper.deleteById("${it.id}")
+                //gitHelper.deleteById("${it.id}")
+                contentResolver.delete(uriWithId, null, null)
                 Log.d(TAG, "Favorite deleted")
                 showToastMessage("${it.login} Unfavorite")
                 menuItem?.let { mn ->
@@ -126,8 +135,8 @@ class DetailActivity : AppCompatActivity() {
             val values = ContentValues()
             values.put(DatabaseContract.GitColumns.LOGIN_NAME, userModel?.login)
             values.put(DatabaseContract.GitColumns.AVATAR, userModel?.avatar)
-            val result = gitHelper.insert(values)
-            userModel?.id = result.toInt()
+            contentResolver.insert(CONTENT_URI, values)
+            userModel?.login
             Log.d(TAG, "Favorite Added")
             showToastMessage("${userModel?.login} Favorite")
             menuItem?.let { mn ->
@@ -155,11 +164,6 @@ class DetailActivity : AppCompatActivity() {
 
     private fun showToastMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        gitHelper.close()
     }
 
 }

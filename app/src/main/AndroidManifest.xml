@@ -4,8 +4,10 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <permission android:name="com.example.githubuserfinalbfaa.READ_DATABASE" android:protectionLevel="normal"/>
+    <permission android:name="com.example.githubuserfinalbfaa.WRITE_DATABASE" android:protectionLevel="normal"/>
 
     <application
         android:allowBackup="true"
@@ -14,6 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name=".provider.MyContentProvider"
+            android:authorities="com.example.githubuserfinalbfaa"
+            android:enabled="true"
+            android:exported="true"
+            android:readPermission="com.example.githubuserfinalbfaa.READ_DATABASE"
+            android:writePermission="com.example.githubuserfinalbfaa.WRITE_DATABASE"/>
+
         <activity android:name=".setting.SettingActivity" />
         <activity android:name=".FavoriteActivity" />
         <activity android:name=".DetailActivity" />

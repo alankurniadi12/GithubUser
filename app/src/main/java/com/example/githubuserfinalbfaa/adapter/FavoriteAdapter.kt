@@ -2,11 +2,13 @@ package com.example.githubuserfinalbfaa.adapter
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.githubuserfinalbfaa.CustomOnItemClickListener
 import com.example.githubuserfinalbfaa.DetailActivity
 import com.example.githubuserfinalbfaa.R
@@ -15,6 +17,7 @@ import kotlinx.android.synthetic.main.item_user.view.*
 
 class FavoriteAdapter(private val activity: Activity): RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {
 
+    val TAG = FavoriteAdapter::class.java.simpleName
     var listFavorite = ArrayList<UserModel>()
     set(listFavorite) {
         if (listFavorite.size > 0) {
@@ -49,8 +52,13 @@ class FavoriteAdapter(private val activity: Activity): RecyclerView.Adapter<Favo
     inner class FavoriteViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(userModel: UserModel){
             with(itemView){
-                Glide.with(itemView.context).load(userModel.avatar).into(img_item_user)
+                Glide.with(itemView.context)
+                    .load(userModel.avatar)
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
+                    .error(R.drawable.ic_error)
+                    .into(img_item_user)
                 tv_item_username.text = userModel.login
+                Log.d(TAG, "${userModel.avatar}")
 
                 rv_list_item.setOnClickListener(CustomOnItemClickListener(adapterPosition, object : CustomOnItemClickListener.OnitemClickCallback {
                     override fun onItemClicked(view: View, position: Int) {

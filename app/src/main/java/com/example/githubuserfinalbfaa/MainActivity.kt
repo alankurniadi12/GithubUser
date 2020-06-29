@@ -3,13 +3,13 @@ package com.example.githubuserfinalbfaa
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
                 intentMain.putExtra(DetailActivity.EXTRA_STATE, data)
                 intentMain.putExtra(DetailActivity.EXTRA_MAIN, "mainactivity")
                 startActivity(intentMain)
-                Toast.makeText(this@MainActivity, "${data.login}", Toast.LENGTH_SHORT).show()
             }
         })
     }
