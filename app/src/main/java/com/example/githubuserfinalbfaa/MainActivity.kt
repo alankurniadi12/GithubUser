@@ -5,35 +5,27 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
 import com.example.githubuserfinalbfaa.adapter.GitAdapter
-import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
 import com.example.githubuserfinalbfaa.model.UserModel
+import com.example.githubuserfinalbfaa.setting.SettingActivity
 import com.example.githubuserfinalbfaa.viewmodel.MainViewModel
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
-import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_user.*
-import org.json.JSONArray
-import org.json.JSONObject
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: GitAdapter
     private lateinit var mainViewModel: MainViewModel
+    private var backPress: Long = 0
+    private var backToast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +50,10 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnitemClickCallback(object : GitAdapter.OnitemClickCallback{
             override fun onItemClicked(data: UserModel) {
-                val intent = Intent(this@MainActivity, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_STATE, data)
-                startActivity(intent)
+                val intentMain = Intent(this@MainActivity, DetailActivity::class.java)
+                intentMain.putExtra(DetailActivity.EXTRA_STATE, data)
+                intentMain.putExtra(DetailActivity.EXTRA_MAIN, "mainactivity")
+                startActivity(intentMain)
                 Toast.makeText(this@MainActivity, "${data.login}", Toast.LENGTH_SHORT).show()
             }
         })
@@ -98,10 +91,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            R.id.menu_setting -> {
+                val intent = Intent(this, SettingActivity::class.java)
+                startActivity(intent)
+                return true
+            }
         }
         return false
     }
-
 
     private fun showLoading(state: Boolean){
         if (state){
@@ -109,5 +106,21 @@ class MainActivity : AppCompatActivity() {
         } else {
             progress_bar.visibility = View.GONE
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        backToast = Toast.makeText(baseContext, "Press back again to exit!", Toast.LENGTH_SHORT)
+        if (backPress + 2000 > System.currentTimeMillis()) {
+            val exit = Intent(Intent.ACTION_MAIN)
+            exit.addCategory(Intent.CATEGORY_HOME)
+            exit.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(exit)
+            backToast?.cancel()
+            return super.onKeyDown(keyCode, event)
+        } else {
+            backToast?.show()
+        }
+        backPress = System.currentTimeMillis()
+        return true
     }
 }

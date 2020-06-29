@@ -2,60 +2,55 @@ package com.example.githubuserfinalbfaa
 
 import android.content.ContentValues
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.githubuserfinalbfaa.adapter.FavoriteAdapter
 import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
 import com.example.githubuserfinalbfaa.db.DatabaseContract
 import com.example.githubuserfinalbfaa.db.GitHelper
-import com.example.githubuserfinalbfaa.helper.MappingHelper
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.example.githubuserfinalbfaa.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class DetailActivity : AppCompatActivity() {
 
     private var isFavorite = false
     private var menuItem: Menu? = null
-    private lateinit var gitHelper: GitHelper
     private var userModel: UserModel? = null
+    private var fromFavorite: String? = null
+    private var fromMainAcitivity: String? = null
+    private lateinit var gitHelper: GitHelper
     private lateinit var detailViewModel: DetailViewModel
 
     companion object {
         internal val TAG = DetailActivity::class.java.simpleName
         const val EXTRA_STATE = "extra_state"
-        const val EXTRA_FAV_POSITION = "extra_fav_position"
+        const val EXTRA_FAV = "extra_fav"
+        const val EXTRA_MAIN = "extra_main"
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        supportActionBar?.title = "Detail User"
 
         gitHelper = GitHelper.getInstance(applicationContext)
         gitHelper.open()
 
+        fromFavorite = intent.getStringExtra(EXTRA_FAV)
+        fromMainAcitivity = intent.getStringExtra(EXTRA_MAIN)
+
         userModel = intent.getParcelableExtra(EXTRA_STATE) as UserModel
         tv_detail_loginname.text = userModel?.login
         Glide.with(this).load(userModel?.avatar).into(img_detail_user)
-
-        //Cek Favorite //masih Error untuk cek data yang sudah dimasukan ke dalam DB
-        //Bisa cek dengan gitHelper.queryAll lalu tambahkan metode Mapping.mapcursorToArrayList
-
 
         val dataFav = gitHelper.queryAll()
         for (data in dataFav) {
@@ -78,7 +73,20 @@ class DetailActivity : AppCompatActivity() {
                 Log.d(TAG, "GetDetail Success")
             }
         })
+    }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            //Cek. Apakah ke DetailActivity dari listitem hasil pencarian atau listitem favorite?
+            if (fromMainAcitivity != null) {
+                val intentMain = Intent(this, MainActivity::class.java)
+                startActivity(intentMain)
+            }else if (fromFavorite != null) {
+                val intentFav = Intent(this, FavoriteActivity::class.java)
+                startActivity(intentFav)
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -108,6 +116,7 @@ class DetailActivity : AppCompatActivity() {
             userModel?.let {
                 gitHelper.deleteById("${it.id}")
                 Log.d(TAG, "Favorite deleted")
+                showToastMessage("${it.login} Unfavorite")
                 menuItem?.let { mn ->
                     isFavorite = false
                     setIconFavorite(mn)
@@ -115,19 +124,18 @@ class DetailActivity : AppCompatActivity() {
             }
         }else {
             val values = ContentValues()
-            //values.put(DatabaseContract.GitColumns._ID)
             values.put(DatabaseContract.GitColumns.LOGIN_NAME, userModel?.login)
             values.put(DatabaseContract.GitColumns.AVATAR, userModel?.avatar)
             val result = gitHelper.insert(values)
             userModel?.id = result.toInt()
             Log.d(TAG, "Favorite Added")
+            showToastMessage("${userModel?.login} Favorite")
             menuItem?.let { mn ->
                 isFavorite = true
                 setIconFavorite(mn)
             }
         }
     }
-
 
     private fun setFollowerFollowing(data: UserModel) {
         val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
@@ -143,6 +151,15 @@ class DetailActivity : AppCompatActivity() {
         val followingFragment = FollowingFragment()
         bundle.putString(FollowingFragment.EXTRA_FOLLOWING, data.login)
         followingFragment.arguments = bundle
+    }
+
+    private fun showToastMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        gitHelper.close()
     }
 
 }

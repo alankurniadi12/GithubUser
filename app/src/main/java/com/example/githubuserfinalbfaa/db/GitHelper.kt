@@ -24,9 +24,9 @@ class GitHelper (context: Context) {
         }
     }
 
-    /*init {
+    init {
         dataBaseHelper = DatabaseHelper(context)
-    }*/
+    }
 
     @Throws(SQLException::class)
     fun open() {
@@ -42,7 +42,7 @@ class GitHelper (context: Context) {
 
     fun queryAll(): ArrayList<UserModel> {
         val arrayList = ArrayList<UserModel>()
-        val cursor = database.query(DATABASE_TABLE, null, null, null, null, null, "$_ID ASC")
+        val cursor = database.query(DATABASE_TABLE, null, null, null, null, null, "$_ID DESC")
         cursor.moveToFirst()
         var userModel: UserModel
         if (cursor.count > 0){
@@ -57,12 +57,6 @@ class GitHelper (context: Context) {
         }
         return arrayList
     }
-
-   /* fun queryAll(): Cursor {
-        return database.query(
-            DATABASE_TABLE, null, null, null, null, null, "$_ID ASC"
-        )
-    }*/
 
     fun queryById(id: String): Cursor {
         return database.query(

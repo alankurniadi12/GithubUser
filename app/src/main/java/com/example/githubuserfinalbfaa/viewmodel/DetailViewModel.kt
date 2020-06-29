@@ -23,9 +23,8 @@ class DetailViewModel: ViewModel() {
     private val dataDetail = MutableLiveData<UserModel>()
 
     fun setDetailUser(login: String?){
-        //val userModel = UserModel()
         val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37xxxx")
+        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37e126")
         asyncClient.addHeader("User-Agent", "request")
         val url = "https://api.github.com/users/$login"
         asyncClient.get(url, object : AsyncHttpResponseHandler() {
@@ -64,10 +63,10 @@ class DetailViewModel: ViewModel() {
                     404 -> "$statusCode : Not Found"
                     else -> "$statusCode : ${error.message}"
                 }
-                //Toast.makeText(detailActivity.applicationContext, errorMessage, Toast.LENGTH_SHORT).show()
             }
         })
     }
+
     fun getDetailData(): LiveData<UserModel>{
         return dataDetail
     }

@@ -15,8 +15,6 @@
     <string name="detail_blog_name">Blog name</string>
     <string name="tab_follower">Follower</string>
     <string name="tab_following">Following</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment_follwer">Hello blank fragment Follower</string>
-    <string name="hello_blank_fragment_follwing">Hello blank fragment Following</string>
+    <string name="menu_setting">Setting</string>
+    <string name="key_reminder">reminder</string>
 </resources>

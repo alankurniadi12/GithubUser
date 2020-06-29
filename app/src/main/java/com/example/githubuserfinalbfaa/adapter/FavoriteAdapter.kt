@@ -1,11 +1,14 @@
 package com.example.githubuserfinalbfaa.adapter
 
 import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.githubuserfinalbfaa.CustomOnItemClickListener
+import com.example.githubuserfinalbfaa.DetailActivity
 import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.model.UserModel
 import kotlinx.android.synthetic.main.item_user.view.*
@@ -18,7 +21,6 @@ class FavoriteAdapter(private val activity: Activity): RecyclerView.Adapter<Favo
             this.listFavorite.clear()
         }
         this.listFavorite.addAll(listFavorite)
-
         notifyDataSetChanged()
     }
 
@@ -49,6 +51,15 @@ class FavoriteAdapter(private val activity: Activity): RecyclerView.Adapter<Favo
             with(itemView){
                 Glide.with(itemView.context).load(userModel.avatar).into(img_item_user)
                 tv_item_username.text = userModel.login
+
+                rv_list_item.setOnClickListener(CustomOnItemClickListener(adapterPosition, object : CustomOnItemClickListener.OnitemClickCallback {
+                    override fun onItemClicked(view: View, position: Int) {
+                        val intent = Intent(activity, DetailActivity::class.java)
+                        intent.putExtra(DetailActivity.EXTRA_STATE, userModel)
+                        intent.putExtra(DetailActivity.EXTRA_FAV, "favorite")
+                        activity.startActivity(intent)
+                    }
+                }))
             }
         }
     }
