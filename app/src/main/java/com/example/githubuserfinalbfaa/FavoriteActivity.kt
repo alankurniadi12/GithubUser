@@ -20,16 +20,13 @@ class FavoriteActivity : AppCompatActivity() {
     private lateinit var adapter: FavoriteAdapter
     internal val TAG = FavoriteActivity::class.java.simpleName
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Favorite"
 
-
         adapter = FavoriteAdapter(this)
-        showRecyclerView()
 
 
         GlobalScope.launch(Dispatchers.Main) {
@@ -46,6 +43,8 @@ class FavoriteActivity : AppCompatActivity() {
                 showSnackbarMessage("Data isEmpty")
             }
         }
+
+        showRecyclerView()
     }
 
     override fun onSupportNavigateUp(): Boolean {

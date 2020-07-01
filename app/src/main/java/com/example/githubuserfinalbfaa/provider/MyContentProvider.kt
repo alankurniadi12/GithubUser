@@ -22,7 +22,6 @@ class MyContentProvider : ContentProvider() {
         init {
             //com.example.githubuserfinalbfaa/git_user
             sUriMatcher.addURI(AUTHORITY, TABLE_NAME, GIT)
-
             //com.example.githubuserfinalbfaa/git_user/id
             sUriMatcher.addURI(AUTHORITY, "$TABLE_NAME/#", GIT_ID)
         }
@@ -56,9 +55,7 @@ class MyContentProvider : ContentProvider() {
             sUriMatcher.match(uri) -> gitHelper.insert(values)
             else -> 0
         }
-
         context?.contentResolver?.notifyChange(CONTENT_URI, null)
-
         return Uri.parse("$CONTENT_URI/$added")
     }
 
@@ -71,7 +68,6 @@ class MyContentProvider : ContentProvider() {
             else -> 0
         }
         context?.contentResolver?.notifyChange(CONTENT_URI, null)
-
         return updated
     }
 
@@ -80,9 +76,7 @@ class MyContentProvider : ContentProvider() {
             sUriMatcher.match(uri) -> gitHelper.deleteById(uri.lastPathSegment.toString())
             else -> 0
         }
-
         context?.contentResolver?.notifyChange(CONTENT_URI, null)
-
         return deleted
     }
 

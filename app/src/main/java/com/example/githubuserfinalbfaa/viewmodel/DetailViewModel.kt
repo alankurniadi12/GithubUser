@@ -1,19 +1,14 @@
 package com.example.githubuserfinalbfaa.viewmodel
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.githubuserfinalbfaa.DetailActivity
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
-import kotlinx.android.synthetic.main.activity_detail.*
 import org.json.JSONObject
-import java.lang.Exception
-import kotlin.math.log
 
 class DetailViewModel: ViewModel() {
 
@@ -56,13 +51,13 @@ class DetailViewModel: ViewModel() {
                 responseBody: ByteArray?,
                 error: Throwable
             ) {
-                Log.d(TAG, "GetAPI Failure")
                 val errorMessage = when (statusCode) {
                     401 -> "$statusCode : Bad Request"
                     403 -> "$statusCode : Forbidden"
                     404 -> "$statusCode : Not Found"
                     else -> "$statusCode : ${error.message}"
                 }
+                Log.d(TAG, "$errorMessage GetAPI Failure")
             }
         })
     }

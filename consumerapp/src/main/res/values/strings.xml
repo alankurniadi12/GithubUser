@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ConsumerApp</string>
+    <string name="cd_image_user_item">Photo Profile</string>
+    <string name="username_item">Username Item</string>
+</resources>
