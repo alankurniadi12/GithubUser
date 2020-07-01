@@ -80,13 +80,4 @@ class MyContentProvider : ContentProvider() {
         return deleted
     }
 
-
-
-
-
-
-
-
-
-
 }
