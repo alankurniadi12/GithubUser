@@ -1,5 +1,6 @@
 package com.example.githubuserfinalbfaa.adapter
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
@@ -50,6 +51,7 @@ class FavoriteAdapter(private val activity: Activity): RecyclerView.Adapter<Favo
     }
 
     inner class FavoriteViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        @SuppressLint("ResourceType")
         fun bind(userModel: UserModel){
             with(itemView){
                 Glide.with(itemView.context)

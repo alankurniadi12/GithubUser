@@ -5,8 +5,8 @@ import android.provider.BaseColumns
 import com.alankurniadi.consumerapp.db.DatabaseContract.GitColumns.Companion.TABLE_NAME
 
 object DatabaseContract {
-    const val AUTHORITY = "com.example.githubuserfinalbfaa"
-    const val SCHEME = "content"
+    private const val AUTHORITY = "com.example.githubuserfinalbfaa"
+    private const val SCHEME = "content"
 
     class GitColumns : BaseColumns {
         companion object {

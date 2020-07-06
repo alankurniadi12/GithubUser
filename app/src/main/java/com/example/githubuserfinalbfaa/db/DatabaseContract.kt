@@ -6,7 +6,7 @@ import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion.
 
 object DatabaseContract {
     const val AUTHORITY = "com.example.githubuserfinalbfaa"
-    const val SCHEME = "content"
+    private const val SCHEME = "content"
 
     class GitColumns : BaseColumns {
         companion object {

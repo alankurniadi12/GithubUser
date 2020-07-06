@@ -16,9 +16,8 @@
     <string name="tab_follower">Follower</string>
     <string name="tab_following">Following</string>
     <string name="menu_setting">Setting</string>
-    <string name="key_reminder">reminder</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="user_favorite_widget">USER FAVORITE</string>
-    <string name="no_data_widget">NO DATA</string>
+
+    <!--SETTING-->
+    <string name="reminder_open_app">Reminder open App</string>
+    <string name="at_09_00_am">at 09:00 AM</string>
 </resources>

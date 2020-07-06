@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/setting_activity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".setting.SettingActivity">
@@ -31,15 +30,14 @@
                     android:id="@+id/tv_reminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reminder open App"
+                    android:text="@string/reminder_open_app"
                     android:textSize="18sp"
                     android:textStyle="bold" />
                 <TextView
-                    android:id="@+id/tv_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_reminder"
-                    android:text="at 09:00 AM" />
+                    android:text="@string/at_09_00_am" />
                 <CheckBox
                     android:id="@+id/cb_reminder"
                     android:layout_width="wrap_content"

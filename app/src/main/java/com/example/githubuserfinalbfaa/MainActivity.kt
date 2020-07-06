@@ -33,13 +33,15 @@ class MainActivity : AppCompatActivity() {
 
         adapter = GitAdapter()
         adapter.notifyDataSetChanged()
-        showRecyclerView()
+
 
         mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
         mainViewModel.getGitSearch().observe(this, Observer { usermodel ->
             if (usermodel != null){
                 adapter.setData(usermodel)
                 showLoading(false)
+                rv_user.visibility = View.VISIBLE
+                showRecyclerView()
             }
         })
     }
@@ -106,6 +108,15 @@ class MainActivity : AppCompatActivity() {
             progress_bar.visibility = View.GONE
         }
     }
+
+    /*private fun showShimmer(state: Boolean) {
+        if (state) {
+            shimmer_list_user.startShimmer()
+        }else {
+            shimmer_list_user.stopShimmer()
+            shimmer_list_user.visibility = View.GONE
+        }
+    }*/
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         backToast = Toast.makeText(baseContext, "Press back again to exit!", Toast.LENGTH_SHORT)

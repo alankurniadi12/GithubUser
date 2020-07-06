@@ -1,5 +1,6 @@
 package com.example.githubuserfinalbfaa
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
@@ -40,6 +41,7 @@ class DetailActivity : AppCompatActivity() {
         const val EXTRA_MAIN = "extra_main"
     }
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)

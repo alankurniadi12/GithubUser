@@ -15,7 +15,7 @@ internal class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATAB
 
         private const val DATABASE_VERSION = 1
 
-        private val SQL_CREATE_TABLE_FAV = "CREATE TABLE $TABLE_NAME" +
+        private const val SQL_CREATE_TABLE_FAV = "CREATE TABLE $TABLE_NAME" +
                 "($_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$LOGIN_NAME TEXT NOT NULL UNIQUE," +
                 "$AVATAR TEXT NOT NULL)"

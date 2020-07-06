@@ -1,10 +1,12 @@
 package com.example.githubuserfinalbfaa.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.model.UserModel
 import kotlinx.android.synthetic.main.item_user.view.*
@@ -31,9 +33,14 @@ class FollowingAdapter: RecyclerView.Adapter<FollowingAdapter.FollowingViewHolde
     }
 
     class FollowingViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        @SuppressLint("ResourceType")
         fun bind(userModel: UserModel){
             with(itemView){
-                Glide.with(itemView.context).load(userModel.avatar).into(img_item_user)
+                Glide.with(itemView.context)
+                    .load(userModel.avatar)
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
+                    .error(R.drawable.ic_error)
+                    .into(img_item_user)
                 tv_item_username.text = userModel.login
             }
         }

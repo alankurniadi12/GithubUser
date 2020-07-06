@@ -7,15 +7,13 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.githubuserfinalbfaa.DetailActivity
 import com.example.githubuserfinalbfaa.FollowerFragment
 import com.example.githubuserfinalbfaa.FollowingFragment
 import com.example.githubuserfinalbfaa.R
-import kotlin.math.log
 
 class SectionsPagerAdaper(private val mContext: Context, fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    var username: String? = "username"
+    private var username: String? = "username"
 
     @StringRes
     private val TAB_TITLES = intArrayOf(R.string.tab_follower, R.string.tab_following)
