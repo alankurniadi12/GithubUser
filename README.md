@@ -28,6 +28,6 @@
 ![01 Image GithubUser](https://user-images.githubusercontent.com/39579462/83623018-fb7d1480-a5ba-11ea-8b2b-a2d30b1fe294.png)
 
 ## Contact 
-feel free to contact me.
+Feel free to contact me.
 * [Facebook](https://web.facebook.com/alankurniadii)
-* [Mail](https://web.facebook.com/alankurniadii)
+* [alankurniadi53@gmail.com](mailto:alankurniadi53@gmail.com)
