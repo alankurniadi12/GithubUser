@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".FollowerFragment">
 
-
     <ProgressBar
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"

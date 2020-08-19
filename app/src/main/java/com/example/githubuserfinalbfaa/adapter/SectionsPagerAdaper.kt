@@ -24,34 +24,29 @@ class SectionsPagerAdaper(private val mContext: Context, fm: FragmentManager): F
             0 -> {
                 fragment = FollowerFragment()
                 val bundle = Bundle()
-                bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, getData())
+                bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, username)
                 fragment.arguments = bundle
             }
 
             1 -> {
                 fragment = FollowingFragment()
                 val bundle = Bundle()
-                bundle.putString(FollowingFragment.EXTRA_FOLLOWING, getData())
+                bundle.putString(FollowingFragment.EXTRA_FOLLOWING, username)
                 fragment.arguments = bundle
             }
         }
         return fragment as Fragment
     }
 
-    fun setData(loginName: String){
+    fun setData(loginName: String) {
         username = loginName
     }
 
-    private fun getData(): String? {
-        return username
-    }
 
     @Nullable
     override fun getPageTitle(position: Int): CharSequence? {
         return mContext.resources.getString(TAB_TITLES[position])
     }
-    override fun getCount(): Int {
-        return 2
-    }
+    override fun getCount(): Int = TAB_TITLES.size
 
 }

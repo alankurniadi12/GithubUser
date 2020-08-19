@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class FavoriteActivity : AppCompatActivity() {
 
     private lateinit var adapter: FavoriteAdapter
-    internal val TAG = FavoriteActivity::class.java.simpleName
+    val TAG = FavoriteActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

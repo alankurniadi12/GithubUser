@@ -3,6 +3,7 @@ package com.example.githubuserfinalbfaa
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -28,7 +29,8 @@ class DetailActivity : AppCompatActivity() {
 
     private var isFavorite = false
     private var menuItem: Menu? = null
-    private var userModel: UserModel? = null
+    private var dataMain: UserModel? = null
+    private var dataFav: UserModel? = null
     private var fromFavorite: String? = null
     private var fromMainAcitivity: String? = null
     private lateinit var detailViewModel: DetailViewModel
@@ -50,40 +52,50 @@ class DetailActivity : AppCompatActivity() {
         fromFavorite = intent.getStringExtra(EXTRA_FAV)
         fromMainAcitivity = intent.getStringExtra(EXTRA_MAIN)
 
-        userModel = intent.getParcelableExtra(EXTRA_STATE) as UserModel
-        tv_detail_loginname.text = userModel?.login
-        Glide.with(this)
-            .load(userModel?.avatar)
-            .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
-            .error(R.drawable.ic_error)
-            .into(img_detail_user)
+        dataMain = intent.getParcelableExtra(EXTRA_STATE) as UserModel
+        Log.e(TAG, "getParcelableExtra: $dataMain")
 
-        uriWithId = Uri.parse(CONTENT_URI.toString() + "/" + userModel?.id)
-
-
+        uriWithId = Uri.parse(CONTENT_URI.toString() + "/" + dataMain?.id)
         val dataGitFav = contentResolver?.query(uriWithId, null, null, null, null)
+        cekFavorite(dataGitFav)
+
+        dataMain?.let {
+            setDataDetail(it)
+            setFollowerFollowing(it) }
+    }
+
+    private fun cekFavorite(dataGitFav: Cursor?) {
         val dataGitObject = MappingHelper.mapCursorToArrayList(dataGitFav)
         for (data in dataGitObject) {
-            if (this.userModel?.login == data.login) {
+            if (this.dataMain?.id == data.id) {
+                Log.e(TAG, "cekFavorite dataGitObject: $dataGitObject")
+                Log.e(TAG, "cekFavorite data: $data")
                 isFavorite = true
-                Log.d(TAG, "this User Favorite")
             }
         }
+    }
 
-        setFollowerFollowing(userModel!!)
-
+    private fun setDataDetail(data: UserModel) {
         detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
-        detailViewModel.setDetailUser(userModel?.login)
+        detailViewModel.setDetailUser(data.login)
         detailViewModel.getDetailData().observe(this, Observer { userModel ->
-            if (userModel != null) {
+            if (userModel != null ) {
+                tv_detail_loginname.text = userModel.login
                 tv_detail_username.text = userModel.name
                 tv_detail_company.text = userModel.company
                 tv_detail_location.text = userModel.location
                 tv_detail_blog.text = userModel.blog
-                Log.d(TAG, "GetDetail Success")
+                Glide.with(this)
+                    .load(userModel.avatar)
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
+                    .error(R.drawable.ic_error)
+                    .into(img_detail_user)
+                Log.e(TAG, "Observer viewmodel: $userModel")
             }
         })
     }
+
+
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK){
@@ -123,7 +135,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setFavorite() {
         if (isFavorite) {
-            userModel?.let {
+            dataMain?.let {
                 //gitHelper.deleteById("${it.id}")
                 contentResolver.delete(uriWithId, null, null)
                 Log.d(TAG, "Favorite deleted")
@@ -135,12 +147,12 @@ class DetailActivity : AppCompatActivity() {
             }
         }else {
             val values = ContentValues()
-            values.put(DatabaseContract.GitColumns.LOGIN_NAME, userModel?.login)
-            values.put(DatabaseContract.GitColumns.AVATAR, userModel?.avatar)
+            values.put(DatabaseContract.GitColumns._ID, dataMain?.id)
+            values.put(DatabaseContract.GitColumns.LOGIN_NAME, dataMain?.login)
+            values.put(DatabaseContract.GitColumns.AVATAR, dataMain?.avatar)
             contentResolver.insert(CONTENT_URI, values)
-            userModel?.login
-            Log.d(TAG, "Favorite Added")
-            showToastMessage("${userModel?.login} Favorite")
+            Log.e(TAG, "InsertData: $values")
+            showToastMessage("${dataMain?.login} Favorite")
             menuItem?.let { mn ->
                 isFavorite = true
                 setIconFavorite(mn)
@@ -151,17 +163,10 @@ class DetailActivity : AppCompatActivity() {
     private fun setFollowerFollowing(data: UserModel) {
         val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
         sectionsPagerAdaper.setData(data.login.toString())
+
         view_pager.adapter = sectionsPagerAdaper
         tabs.setupWithViewPager(view_pager)
         supportActionBar?.elevation = 0f
-
-        val bundle = Bundle()
-        val followerFragment = FollowerFragment()
-        bundle.putString(FollowerFragment.EXTRA_FOLLOWERS, data.login)
-        followerFragment.arguments = bundle
-        val followingFragment = FollowingFragment()
-        bundle.putString(FollowingFragment.EXTRA_FOLLOWING, data.login)
-        followingFragment.arguments = bundle
     }
 
     private fun showToastMessage(message: String) {

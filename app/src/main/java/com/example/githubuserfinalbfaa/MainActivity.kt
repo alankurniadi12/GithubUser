@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         adapter = GitAdapter()
         adapter.notifyDataSetChanged()
 
-
         mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
         mainViewModel.getGitSearch().observe(this, Observer { usermodel ->
             if (usermodel != null){
@@ -69,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView.queryHint = resources.getString(R.string.search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isEmpty()) {
                     return true
@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 return true
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 return false
             }
@@ -109,14 +110,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun showShimmer(state: Boolean) {
-        if (state) {
-            shimmer_list_user.startShimmer()
-        }else {
-            shimmer_list_user.stopShimmer()
-            shimmer_list_user.visibility = View.GONE
-        }
-    }*/
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         backToast = Toast.makeText(baseContext, "Press back again to exit!", Toast.LENGTH_SHORT)

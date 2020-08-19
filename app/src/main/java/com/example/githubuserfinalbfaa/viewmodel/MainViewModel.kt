@@ -34,6 +34,7 @@ class MainViewModel: ViewModel() {
                     for (i in 0 until item.length()) {
                         val user = item.getJSONObject(i)
                         val userModel = UserModel ()
+                        userModel.id = user.getInt("id")
                         userModel.login = user.getString("login")
                         userModel.avatar = user.getString("avatar_url")
                         listItems.add(userModel)

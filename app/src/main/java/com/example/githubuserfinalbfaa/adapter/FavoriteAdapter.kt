@@ -60,7 +60,7 @@ class FavoriteAdapter(private val activity: Activity): RecyclerView.Adapter<Favo
                     .error(R.drawable.ic_error)
                     .into(img_item_user)
                 tv_item_username.text = userModel.login
-                Log.d(TAG, "${userModel.avatar}")
+                Log.d(TAG, userModel.toString())
 
                 rv_list_item.setOnClickListener(CustomOnItemClickListener(adapterPosition, object : CustomOnItemClickListener.OnitemClickCallback {
                     override fun onItemClicked(view: View, position: Int) {
