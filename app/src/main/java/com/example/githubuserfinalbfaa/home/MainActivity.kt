@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa
+package com.example.githubuserfinalbfaa.home
 
 import android.app.SearchManager
 import android.content.Context
@@ -14,10 +14,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.githubuserfinalbfaa.DetailActivity
+import com.example.githubuserfinalbfaa.FavoriteActivity
+import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.adapter.GitAdapter
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.example.githubuserfinalbfaa.setting.SettingActivity
-import com.example.githubuserfinalbfaa.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +36,8 @@ class MainActivity : AppCompatActivity() {
         adapter = GitAdapter()
         adapter.notifyDataSetChanged()
 
-        mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
+            MainViewModel::class.java)
         mainViewModel.getGitSearch().observe(this, Observer { usermodel ->
             if (usermodel != null){
                 adapter.setData(usermodel)

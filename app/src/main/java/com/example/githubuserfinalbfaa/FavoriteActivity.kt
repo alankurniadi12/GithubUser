@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserfinalbfaa.adapter.FavoriteAdapter
 import com.example.githubuserfinalbfaa.db.DatabaseContract.CONTENT_URI
 import com.example.githubuserfinalbfaa.helper.MappingHelper
+import com.example.githubuserfinalbfaa.home.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_favorite.*
 import kotlinx.coroutines.Dispatchers

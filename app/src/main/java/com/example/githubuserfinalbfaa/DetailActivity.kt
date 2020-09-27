@@ -21,6 +21,7 @@ import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
 import com.example.githubuserfinalbfaa.db.DatabaseContract
 import com.example.githubuserfinalbfaa.db.DatabaseContract.CONTENT_URI
 import com.example.githubuserfinalbfaa.helper.MappingHelper
+import com.example.githubuserfinalbfaa.home.MainActivity
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.example.githubuserfinalbfaa.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -30,7 +31,6 @@ class DetailActivity : AppCompatActivity() {
     private var isFavorite = false
     private var menuItem: Menu? = null
     private var dataMain: UserModel? = null
-    private var dataFav: UserModel? = null
     private var fromFavorite: String? = null
     private var fromMainAcitivity: String? = null
     private lateinit var detailViewModel: DetailViewModel
@@ -52,7 +52,7 @@ class DetailActivity : AppCompatActivity() {
         fromFavorite = intent.getStringExtra(EXTRA_FAV)
         fromMainAcitivity = intent.getStringExtra(EXTRA_MAIN)
 
-        dataMain = intent.getParcelableExtra(EXTRA_STATE) as UserModel
+        dataMain = intent.getParcelableExtra(EXTRA_STATE)
         Log.e(TAG, "getParcelableExtra: $dataMain")
 
         uriWithId = Uri.parse(CONTENT_URI.toString() + "/" + dataMain?.id)
