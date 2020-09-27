@@ -118,7 +118,7 @@ class AlarmReceiver: BroadcastReceiver() {
     private fun isDateInvalid(time: String, format: String): Boolean {
         return try {
             val df = SimpleDateFormat(format, Locale.getDefault())
-            df.isLenient = false
+            df.isLenient = true
             df.parse(time)
             false
         } catch (e: ParseException) {
