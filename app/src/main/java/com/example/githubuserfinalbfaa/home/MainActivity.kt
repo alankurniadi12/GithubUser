@@ -1,31 +1,29 @@
 package com.example.githubuserfinalbfaa.home
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserfinalbfaa.DetailActivity
 import com.example.githubuserfinalbfaa.FavoriteActivity
 import com.example.githubuserfinalbfaa.R
-import com.example.githubuserfinalbfaa.adapter.GitAdapter
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.example.githubuserfinalbfaa.setting.SettingActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var adapter: GitAdapter
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var resultViewModel: ResultViewModel
+    private lateinit var resultAdapter: ResultAdapter
     private var backPress: Long = 0
     private var backToast: Toast? = null
 
@@ -33,31 +31,48 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        adapter = GitAdapter()
-        adapter.notifyDataSetChanged()
+        resultAdapter = ResultAdapter()
+        resultAdapter.notifyDataSetChanged()
 
-        mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
-            MainViewModel::class.java)
-        mainViewModel.getGitSearch().observe(this, Observer { usermodel ->
-            if (usermodel != null){
-                adapter.setData(usermodel)
-                showLoading(false)
-                rv_user.visibility = View.VISIBLE
-                showRecyclerView()
+        resultViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ResultViewModel::class.java)
+
+        val searchView = findViewById<SearchView>(R.id.search)
+        searchView.queryHint = resources.getString(R.string.hint_text)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                if (query.isEmpty()) {
+                    return true
+                } else {
+                    progress_bar.visibility = View.VISIBLE
+                    resultViewModel.setSearchUserGit(query)
+                }
+                return true
             }
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+
         })
-    }
 
-    private fun showRecyclerView() {
-        rv_user.layoutManager = LinearLayoutManager(this)
-        rv_user.adapter = adapter
+        resultViewModel.getGitSearch().observe(this, Observer { data ->
+            Log.e("MainActivity", "ObserveData: $data")
+            if (data != null) {
+                resultAdapter.setData(data)
+                progress_bar.visibility = View.GONE
+                rv_search.visibility = View.VISIBLE
+                rv_search.layoutManager = LinearLayoutManager(this)
+                rv_search.adapter = resultAdapter
 
-        adapter.setOnitemClickCallback(object : GitAdapter.OnitemClickCallback{
-            override fun onItemClicked(data: UserModel) {
-                val intentMain = Intent(this@MainActivity, DetailActivity::class.java)
-                intentMain.putExtra(DetailActivity.EXTRA_STATE, data)
-                intentMain.putExtra(DetailActivity.EXTRA_MAIN, "mainactivity")
-                startActivity(intentMain)
+                resultAdapter.setOnitemClickCallback(object : ResultAdapter.OnitemClickCallback {
+                    override fun onItemClicked(data: UserModel) {
+                        val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                        intent.putExtra(DetailActivity.EXTRA_STATE, data)
+                        intent.putExtra(DetailActivity.EXTRA_MAIN, "mainactivity")
+                        startActivity(intent)
+                    }
+                })
+            }else{
+                progress_bar.visibility = View.GONE
             }
         })
     }
@@ -66,26 +81,6 @@ class MainActivity : AppCompatActivity() {
         val inflater = menuInflater
         inflater.inflate(R.menu.options_menu, menu)
 
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu.findItem(R.id.search_user).actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.queryHint = resources.getString(R.string.search_hint)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-            override fun onQueryTextSubmit(query: String): Boolean {
-                if (query.isEmpty()) {
-                    return true
-                } else {
-                    showLoading(true)
-                    mainViewModel.setSearchUserGit(query)
-                }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                return false
-            }
-        })
         return true
     }
 
@@ -103,14 +98,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return false
-    }
-
-    private fun showLoading(state: Boolean){
-        if (state){
-            progress_bar.visibility = View.VISIBLE
-        } else {
-            progress_bar.visibility = View.GONE
-        }
     }
 
 

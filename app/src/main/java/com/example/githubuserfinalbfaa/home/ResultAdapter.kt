@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa.adapter
+package com.example.githubuserfinalbfaa.home
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.model.UserModel
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class GitAdapter: RecyclerView.Adapter<GitAdapter.GitViewHolder>() {
+class ResultAdapter: RecyclerView.Adapter<ResultAdapter.GitViewHolder>() {
 
     private var onItemClickCallback: OnitemClickCallback? = null
 

@@ -6,4 +6,5 @@
     <color name="colorBackgroundTab">#000000</color>
 
     <color name="colorTextTertiary">#EFEFEF</color>
+    <color name="colorWhite">#FFFFFF</color>
 </resources>

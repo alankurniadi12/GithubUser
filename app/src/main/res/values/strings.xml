@@ -17,7 +17,11 @@
     <string name="tab_following">Following</string>
     <string name="menu_setting">Setting</string>
 
+    <string name="hint_text">searchID: alankurniadi</string>
+
     <!--SETTING-->
     <string name="reminder_open_app">Reminder open App</string>
     <string name="at_09_00_am">at 09:00 AM</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
