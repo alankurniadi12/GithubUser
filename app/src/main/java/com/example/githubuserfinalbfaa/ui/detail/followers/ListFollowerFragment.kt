@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa
+package com.example.githubuserfinalbfaa.ui.detail.followers
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserfinalbfaa.ui.detail.followers.FollowersAdapter
-import com.example.githubuserfinalbfaa.viewmodel.FollowersViewModel
+import com.example.githubuserfinalbfaa.R
 import kotlinx.android.synthetic.main.fragment_follower_list.*
 
 /**
@@ -38,7 +37,8 @@ class ListFollowerFragment : Fragment() {
         adapter = FollowersAdapter()
         showRecyclerView()
 
-        followersViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowersViewModel::class.java)
+        followersViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
+            FollowersViewModel::class.java)
         if (arguments != null) {
             val username = arguments?.getString(EXTRA_FOLLOWERS)
             followersViewModel.setFollowers(username.toString())

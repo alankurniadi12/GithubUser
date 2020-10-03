@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa.viewmodel
+package com.example.githubuserfinalbfaa.ui.detail.followers
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -9,7 +9,6 @@ import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import org.json.JSONArray
-import java.lang.Exception
 
 class FollowingViewModel: ViewModel() {
 
@@ -19,7 +18,7 @@ class FollowingViewModel: ViewModel() {
         val listItems = ArrayList<UserModel>()
 
         val asyncClient = AsyncHttpClient()
-        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37e126")
+        asyncClient.addHeader("Authorization", "token eca6d6fc61cc9b9295b7c51b9eada7931b37#UseYourToken")
         asyncClient.addHeader("User-Agent", "request")
         val url = "https://api.github.com/users/$name/following"
 

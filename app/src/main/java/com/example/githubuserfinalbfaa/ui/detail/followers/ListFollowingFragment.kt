@@ -1,15 +1,14 @@
-package com.example.githubuserfinalbfaa
+package com.example.githubuserfinalbfaa.ui.detail.followers
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserfinalbfaa.ui.detail.followers.FollowingAdapter
-import com.example.githubuserfinalbfaa.viewmodel.FollowingViewModel
+import com.example.githubuserfinalbfaa.R
 import kotlinx.android.synthetic.main.fragment_following_list.*
 
 /**
@@ -39,7 +38,8 @@ class ListFollowingFragment : Fragment() {
 
         showRecyclerView()
 
-        followingViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowingViewModel::class.java)
+        followingViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
+            FollowingViewModel::class.java)
 
         if (arguments != null) {
             val username = arguments?.getString(EXTRA_FOLLOWING)
