@@ -12,7 +12,8 @@ data class UserModel (
     var company: String? = null,
     var location: String? = null,
     var blog: String? = null,
-    var repository: String? = null,
+    var repository: Int = 0,
     var follower: Int = 0,
-    var following: Int = 0
+    var following: Int = 0,
+    var repoName: String? = null
 ): Parcelable

@@ -20,9 +20,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:targetApi="m">
+        <activity android:name=".ui.detail.followers.FollowersActivity"></activity>
 
         <provider
             android:name=".provider.MyContentProvider"
@@ -33,9 +34,9 @@
             android:writePermission="com.example.githubuserfinalbfaa.WRITE_DATABASE" />
 
         <activity android:name=".setting.SettingActivity" />
-        <activity android:name=".FavoriteActivity" />
-        <activity android:name=".DetailActivity" />
-        <activity android:name=".home.MainActivity">
+        <activity android:name=".ui.favorite.FavoriteActivity" />
+        <activity android:name=".ui.detail.DetailActivity" />
+        <activity android:name=".ui.home.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa.home
+package com.example.githubuserfinalbfaa.ui.detail.followers
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -11,49 +11,37 @@ import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.model.UserModel
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class ResultAdapter: RecyclerView.Adapter<ResultAdapter.GitViewHolder>() {
+class FollowersAdapter: RecyclerView.Adapter<FollowersAdapter.FollowerViewHolder>() {
 
-    private var onItemClickCallback: OnitemClickCallback? = null
+    private val mData= ArrayList<UserModel>()
 
-    fun setOnitemClickCallback(onItemClickCallback: OnitemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
-
-    interface OnitemClickCallback {
-        fun onItemClicked(data: UserModel)
-    }
-
-    private val mData = ArrayList<UserModel>()
-
-    fun setData(items: ArrayList<UserModel>){
+    fun setData(items: ArrayList<UserModel>) {
         mData.clear()
         mData.addAll(items)
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GitViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowerViewHolder {
         val mView = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
-        return GitViewHolder(mView)
-    }
-
-    override fun onBindViewHolder(holder: GitViewHolder, position: Int) {
-        holder.bind(mData[position])
+        return FollowerViewHolder(mView)
     }
 
     override fun getItemCount(): Int = mData.size
 
-    inner class GitViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    override fun onBindViewHolder(holder: FollowerViewHolder, position: Int) {
+        holder.bind(mData[position])
+    }
+
+    class FollowerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         @SuppressLint("ResourceType")
         fun bind(userModel: UserModel){
-            with(itemView) {
+            with(itemView){
                 Glide.with(itemView.context)
                     .load(userModel.avatar)
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
                     .error(R.drawable.ic_error)
                     .into(img_item_user)
                 tv_item_username.text = userModel.login
-
-                itemView.setOnClickListener { onItemClickCallback?.onItemClicked(userModel)}
             }
         }
     }

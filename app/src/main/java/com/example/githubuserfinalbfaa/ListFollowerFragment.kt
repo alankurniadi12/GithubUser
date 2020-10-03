@@ -8,14 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserfinalbfaa.adapter.FollowersAdapter
+import com.example.githubuserfinalbfaa.ui.detail.followers.FollowersAdapter
 import com.example.githubuserfinalbfaa.viewmodel.FollowersViewModel
-import kotlinx.android.synthetic.main.fragment_follower.*
+import kotlinx.android.synthetic.main.fragment_follower_list.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class FollowerFragment : Fragment() {
+class ListFollowerFragment : Fragment() {
 
     companion object{
         const val EXTRA_FOLLOWERS = "followers_name"
@@ -28,7 +28,7 @@ class FollowerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_follower, container, false)
+        return inflater.inflate(R.layout.fragment_follower_list, container, false)
 
     }
 
@@ -39,13 +39,10 @@ class FollowerFragment : Fragment() {
         showRecyclerView()
 
         followersViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowersViewModel::class.java)
-
-
         if (arguments != null) {
             val username = arguments?.getString(EXTRA_FOLLOWERS)
             followersViewModel.setFollowers(username.toString())
         }
-
         followersViewModel.getFollowers().observe(viewLifecycleOwner, Observer { usermodel ->
             if (usermodel != null) {
                 adapter.setData(usermodel)

@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa
+package com.example.githubuserfinalbfaa.ui.detail
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -15,15 +15,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.githubuserfinalbfaa.adapter.SectionsPagerAdaper
+import com.example.githubuserfinalbfaa.ui.favorite.FavoriteActivity
+import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.db.DatabaseContract
 import com.example.githubuserfinalbfaa.db.DatabaseContract.CONTENT_URI
 import com.example.githubuserfinalbfaa.helper.MappingHelper
-import com.example.githubuserfinalbfaa.home.MainActivity
 import com.example.githubuserfinalbfaa.model.UserModel
-import com.example.githubuserfinalbfaa.viewmodel.DetailViewModel
+import com.example.githubuserfinalbfaa.ui.detail.followers.FollowersActivity
+import com.example.githubuserfinalbfaa.ui.home.MainActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
@@ -32,9 +34,11 @@ class DetailActivity : AppCompatActivity() {
     private var menuItem: Menu? = null
     private var dataMain: UserModel? = null
     private var fromFavorite: String? = null
-    private var fromMainAcitivity: String? = null
+    private var fromMainActivity: String? = null
+    private lateinit var listRepoAdapter: ListRepoAdapter
     private lateinit var detailViewModel: DetailViewModel
     private lateinit var uriWithId: Uri
+
 
     companion object {
         internal val TAG = DetailActivity::class.java.simpleName
@@ -47,10 +51,13 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        supportActionBar?.title = "Detail User"
+
+        setSupportActionBar(toolbar_detail)
+
+        listRepoAdapter = ListRepoAdapter()
 
         fromFavorite = intent.getStringExtra(EXTRA_FAV)
-        fromMainAcitivity = intent.getStringExtra(EXTRA_MAIN)
+        fromMainActivity = intent.getStringExtra(EXTRA_MAIN)
 
         dataMain = intent.getParcelableExtra(EXTRA_STATE)
         Log.e(TAG, "getParcelableExtra: $dataMain")
@@ -59,10 +66,24 @@ class DetailActivity : AppCompatActivity() {
         val dataGitFav = contentResolver?.query(uriWithId, null, null, null, null)
         cekFavorite(dataGitFav)
 
-        dataMain?.let {
-            setDataDetail(it)
-            setFollowerFollowing(it) }
+        dataMain?.let {mData ->
+            setDataDetail(mData)
+        }
+
+
+        view_followers.setOnClickListener {
+            val intent = Intent(this@DetailActivity, FollowersActivity::class.java)
+            intent.putExtra(FollowersActivity.EXTRA_FOLLOWERS, dataMain)
+            startActivity(intent)
+        }
+
+        view_following.setOnClickListener {
+            val intent = Intent(this@DetailActivity, FollowersActivity::class.java)
+            intent.putExtra(FollowersActivity.EXTRA_FOLLOWING, dataMain)
+            startActivity(intent)
+        }
     }
+
 
     private fun cekFavorite(dataGitFav: Cursor?) {
         val dataGitObject = MappingHelper.mapCursorToArrayList(dataGitFav)
@@ -76,15 +97,19 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun setDataDetail(data: UserModel) {
-        detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DetailViewModel::class.java)
+        detailViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
+            DetailViewModel::class.java)
         detailViewModel.setDetailUser(data.login)
         detailViewModel.getDetailData().observe(this, Observer { userModel ->
             if (userModel != null ) {
-                tv_detail_loginname.text = userModel.login
+                tv_title_detail.text = userModel.login
                 tv_detail_username.text = userModel.name
                 tv_detail_company.text = userModel.company
                 tv_detail_location.text = userModel.location
                 tv_detail_blog.text = userModel.blog
+                tv_repo_value.text = userModel.repository.toString()
+                tv_follower_value.text = userModel.follower.toString()
+                tv_following_value.text = userModel.following.toString()
                 Glide.with(this)
                     .load(userModel.avatar)
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
@@ -93,6 +118,15 @@ class DetailActivity : AppCompatActivity() {
                 Log.e(TAG, "Observer viewmodel: $userModel")
             }
         })
+        detailViewModel.setRepo(data.login).observe(this, Observer {
+            Log.e("DetailActivity", "Data setRepo: $it")
+            if (it != null) {
+                listRepoAdapter.setData(it)
+                rv_repo.layoutManager = LinearLayoutManager(this)
+                rv_repo.adapter = listRepoAdapter
+            }
+
+        })
     }
 
 
@@ -100,7 +134,7 @@ class DetailActivity : AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK){
             //Cek. Apakah ke DetailActivity dari listitem hasil pencarian atau listitem favorite?
-            if (fromMainAcitivity != null) {
+            if (fromMainActivity != null) {
                 val intentMain = Intent(this, MainActivity::class.java)
                 startActivity(intentMain)
             }else if (fromFavorite != null) {
@@ -120,9 +154,13 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setIconFavorite(menu: Menu) {
         if (isFavorite){
-            menu.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
+            menu.getItem(0)?.icon = ContextCompat.getDrawable(this,
+                R.drawable.ic_favorite_black_24dp
+            )
         } else {
-            menu.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_border_black_24dp)
+            menu.getItem(0)?.icon = ContextCompat.getDrawable(this,
+                R.drawable.ic_favorite_border_black_24dp
+            )
         }
     }
 
@@ -160,14 +198,6 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFollowerFollowing(data: UserModel) {
-        val sectionsPagerAdaper = SectionsPagerAdaper(this, supportFragmentManager)
-        sectionsPagerAdaper.setData(data.login.toString())
-
-        view_pager.adapter = sectionsPagerAdaper
-        tabs.setupWithViewPager(view_pager)
-        supportActionBar?.elevation = 0f
-    }
 
     private fun showToastMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

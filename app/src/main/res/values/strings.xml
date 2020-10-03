@@ -1,12 +1,9 @@
 <resources>
     <string name="app_name">Git User</string>
-    <string name="search">Search GitUser</string>
-    <string name="search_hint">Input username</string>
     <string name="username_item">Username Item</string>
     <string name="cd_image_user_item">Image user item</string>
     <string name="cd_avatar_user">Avatar user</string>
     <string name="detail_user_name">User Name</string>
-    <string name="detail_login_name">login_name</string>
     <string name="cd_icon_company">Icon company</string>
     <string name="detail_company_name">Company Name</string>
     <string name="cd_icon_location">Icon location</string>
@@ -23,5 +20,9 @@
     <string name="reminder_open_app">Reminder open App</string>
     <string name="at_09_00_am">at 09:00 AM</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="value_detail">0</string>
+    <string name="title_home">Git Search ID</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="repo">Repo</string>
 </resources>

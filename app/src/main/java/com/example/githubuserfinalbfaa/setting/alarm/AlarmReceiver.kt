@@ -13,7 +13,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.example.githubuserfinalbfaa.home.MainActivity
+import com.example.githubuserfinalbfaa.ui.home.MainActivity
 import com.example.githubuserfinalbfaa.R
 import java.text.ParseException
 import java.text.SimpleDateFormat

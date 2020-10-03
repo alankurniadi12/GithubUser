@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa.home
+package com.example.githubuserfinalbfaa.ui.home
 
 import android.util.Log
 import androidx.lifecycle.LiveData

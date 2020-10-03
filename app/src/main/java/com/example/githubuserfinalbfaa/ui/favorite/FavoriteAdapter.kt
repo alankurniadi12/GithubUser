@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa.adapter
+package com.example.githubuserfinalbfaa.ui.favorite
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.githubuserfinalbfaa.CustomOnItemClickListener
-import com.example.githubuserfinalbfaa.DetailActivity
 import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.model.UserModel
+import com.example.githubuserfinalbfaa.ui.detail.DetailActivity
 import kotlinx.android.synthetic.main.item_user.view.*
 
 class FavoriteAdapter(private val activity: Activity): RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>() {

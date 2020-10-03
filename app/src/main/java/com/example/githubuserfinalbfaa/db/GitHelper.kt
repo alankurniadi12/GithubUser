@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion.LOGIN_NAME
 import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion.TABLE_NAME
 import com.example.githubuserfinalbfaa.db.DatabaseContract.GitColumns.Companion._ID
 import java.sql.SQLException
@@ -32,7 +33,7 @@ class GitHelper (context: Context) {
 
     fun queryAll(): Cursor {
         return database.query(
-            DATABASE_TABLE, null, null, null, null, null, "$_ID DESC"
+            DATABASE_TABLE, null, null, null, null, null, "$LOGIN_NAME ASC"
         )
     }
 

@@ -1,14 +1,14 @@
-package com.example.githubuserfinalbfaa
+package com.example.githubuserfinalbfaa.ui.favorite
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserfinalbfaa.adapter.FavoriteAdapter
+import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.db.DatabaseContract.CONTENT_URI
 import com.example.githubuserfinalbfaa.helper.MappingHelper
-import com.example.githubuserfinalbfaa.home.MainActivity
+import com.example.githubuserfinalbfaa.ui.home.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_favorite.*
 import kotlinx.coroutines.Dispatchers
@@ -19,13 +19,13 @@ import kotlinx.coroutines.launch
 class FavoriteActivity : AppCompatActivity() {
 
     private lateinit var adapter: FavoriteAdapter
-    val TAG = FavoriteActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite)
+
+        setSupportActionBar(toolbar_fav)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Favorite"
 
         adapter = FavoriteAdapter(this)
 

@@ -1,4 +1,4 @@
-package com.example.githubuserfinalbfaa.home
+package com.example.githubuserfinalbfaa.ui.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserfinalbfaa.DetailActivity
-import com.example.githubuserfinalbfaa.FavoriteActivity
 import com.example.githubuserfinalbfaa.R
 import com.example.githubuserfinalbfaa.model.UserModel
 import com.example.githubuserfinalbfaa.setting.SettingActivity
+import com.example.githubuserfinalbfaa.ui.detail.DetailActivity
+import com.example.githubuserfinalbfaa.ui.favorite.FavoriteActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                 if (query.isEmpty()) {
                     return true
                 } else {
+                    search_text.visibility = View.GONE
                     progress_bar.visibility = View.VISIBLE
                     resultViewModel.setSearchUserGit(query)
                 }
@@ -59,9 +60,11 @@ class MainActivity : AppCompatActivity() {
         resultViewModel.getGitSearch().observe(this, Observer { data ->
             Log.e("MainActivity", "ObserveData: $data")
             if (data != null) {
-                resultAdapter.setData(data)
+                search_text.visibility = View.GONE
                 progress_bar.visibility = View.GONE
                 rv_search.visibility = View.VISIBLE
+
+                resultAdapter.setData(data)
                 rv_search.layoutManager = LinearLayoutManager(this)
                 rv_search.adapter = resultAdapter
 
@@ -104,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        backToast = Toast.makeText(baseContext, "Press back again to exit!", Toast.LENGTH_SHORT)
+        backToast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT)
         if (backPress + 2000 > System.currentTimeMillis()) {
             val exit = Intent(Intent.ACTION_MAIN)
             exit.addCategory(Intent.CATEGORY_HOME)

@@ -23,14 +23,14 @@
 
     <TextView
         android:id="@+id/tv_item_username"
+        style="@style/TextContent"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/img_item_user"
         android:maxLines="2"
         android:text="@string/username_item"
-        android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/img_item_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
