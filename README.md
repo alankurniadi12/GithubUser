@@ -23,9 +23,13 @@
 * [Glide](https://github.com/bumptech/glide)
 * [Loopj - Android Asynchronous Http Client](http://loopj.com/android-async-http)
 * [Shared Preference](https://developer.android.com/jetpack/androidx/releases/preference/)
+* [ShapeOfView](https://github.com/florent37/ShapeOfView)
 
 ## Screenshots
-![01 Image GithubUser](https://user-images.githubusercontent.com/39579462/83623018-fb7d1480-a5ba-11ea-8b2b-a2d30b1fe294.png)
+![home2](https://user-images.githubusercontent.com/39579462/94994829-7172a600-05c4-11eb-883e-a7fe0261771d.png) 
+![resultsearch](https://user-images.githubusercontent.com/39579462/94994881-b3035100-05c4-11eb-9aa5-0042bb8003de.png) 
+![detail](https://user-images.githubusercontent.com/39579462/94994940-04abdb80-05c5-11eb-8163-2537e40b9ddb.png) 
+![followers](https://user-images.githubusercontent.com/39579462/94994979-489ee080-05c5-11eb-99a9-53fe13a547de.png)
 
 ## Contact 
 Feel free to contact me.
